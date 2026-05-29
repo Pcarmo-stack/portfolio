@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ============================================================== -->
+  <!-- EDIT YOUR SITE TITLE AND DESCRIPTION HERE                      -->
+  <!-- ============================================================== -->
+  <title>Pedro Carmo — 3D Artist & Digital Designer</title>
+  <meta name="description" content="Portfolio of Pedro Carmo — 3D artist and digital designer crafting cinematic worlds." />
+
+  <!-- Google Fonts (loaded from CDN — no install needed) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+
+  <!-- Your stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- <model-viewer> web component (used for 3D models) -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+</head>
+
+<body>
+
+  <!-- ============================================================== -->
+  <!-- NAVIGATION BAR                                                 -->
+  <!-- ============================================================== -->
+  <header class="nav">
+    <a href="#top" class="nav-logo">Pedro<span>.Carmo</span></a>
+    <nav class="nav-links">
+      <a href="#work">Projects</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- HERO SECTION                                                   -->
+  <!-- EDIT YOUR NAME, ROLE, AND INTRO TEXT BELOW                     -->
+  <!-- ============================================================== -->
+  <section class="hero" id="top">
+    <div class="hero-bg"></div>
+
+    <div class="hero-inner">
+      <p class="hero-tag">
+
+      <!-- CHANGE YOUR NAME HERE -->
+      <h1 class="hero-title">
+        <span class="word"><span>Pedro</span></span>
+        <span class="word"><span>Carmo</span></span>
+      </h1>
+
+      <div class="hero-bottom">
+        <!-- CHANGE YOUR TAGLINE HERE -->
+        <p class="hero-sub">
+          A multimedia student trying to get into the world of 3D
+        </p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- MARQUEE / SERVICES STRIP                                       -->
+  <!-- EDIT YOUR SERVICES HERE (comma-separated list)                 -->
+  <!-- ============================================================== -->
+  <section class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>3D Art Direction</span><span>✦</span>
+      <span>CGI &amp; Product Visualization</span><span>✦</span>
+      <span>Motion Design</span><span>✦</span>
+      <span>Brand Identity Systems</span><span>✦</span>
+      <span>Creative Direction</span><span>✦</span>
+      <!-- duplicate for seamless loop -->
+      <span>3D Art Direction</span><span>✦</span>
+      <span>CGI &amp; Product Visualization</span><span>✦</span>
+      <span>Motion Design</span><span>✦</span>
+      <span>Brand Identity Systems</span><span>✦</span>
+      <span>Creative Direction</span><span>✦</span>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- WORK / PROJECTS SECTION                                        -->
+  <!--                                                                -->
+  <!-- HOW TO ADD A NEW PROJECT:                                      -->
+  <!--   1. Copy a full <article class="project"> ... </article>      -->
+  <!--      block below.                                              -->
+  <!--   2. Paste it where you want it to appear in the grid          -->
+  <!--      (projects display in the order they appear here).         -->
+  <!--   3. Change the title, description, image paths, and links.    -->
+  <!--   4. Drop your media into the matching folders:                -->
+  <!--        /images   for thumbnails and gallery images             -->
+  <!--        /videos   for .mp4 / .webm video files                  -->
+  <!--        /models   for .glb / .gltf 3D files                     -->
+  <!--                                                                -->
+  <!-- TO REMOVE A PROJECT: delete its entire <article>...</article>  -->
+  <!-- TO REORDER PROJECTS: cut and paste the <article> blocks.       -->
+  <!-- ============================================================== -->
+  <section class="work" id="work">
+    <div class="section-head">
+      <p class="eyebrow">Selected Studies — 2025 / 2026</p>
+      <h2 class="section-title">My <em>journey</em></h2>
+    </div>
+
+    <div class="project-grid">
+
+      <!-- ============================================================ -->
+      <!-- PROJECT START — Shark project                               -->
+      <!-- Duplicate this entire <article> block to add a new project.  -->
+      <!-- ============================================================ -->
+      <article class="project">
+        <div class="project-card">
+          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
+          <img src="images/shark-thumb.jpg" alt="Shark project" class="project-img" />
+
+          <!-- HOVER VIDEO: plays on card hover -->
+          <video class="project-hover-video" src="videos/shark_hover.mp4"
+                 muted loop playsinline preload="none"></video>
+
+          <div class="project-info">
+            <p class="project-meta">3D / Sculpture · 2026</p>
+            <h3 class="project-name">Shark project</h3>
+          </div>
+          <span class="project-arrow">↗</span>
+        </div>
+
+        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
+        <template class="project-details">
+          <p class="d-summary">
+            A sculpted shark study — recreation of a sketch in 3D using Blender
+          </p>
+
+          <p class="d-body">
+            Modelled after a sketch made by Alyssa Veysey, this project is the outcome of the final assigment for CGCOOKIE CORE | Fundamentals of Digital Sculpting in Blender Course.
+          </p>
+            <!-- BEFORE / AFTER COMPARE SLIDER
+               Replace the src values with your two images. -->
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/shark-d.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/shark-c.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <!-- HERO VIDEO -->
+          <video class="d-video" src="videos/shark_vid.mp4"
+                 poster="images/shark-thumb.jpg"
+                 autoplay muted loop playsinline controls></video>
+
+          <!-- 3D MODEL -->
+          <div class="model-wrap" data-model-wrap>
+            <model-viewer class="d-model"
+                          src="models/Final_shark5.glb"
+                          camera-controls
+                          disable-zoom
+                          touch-action="pan-y"
+                          shadow-intensity="1"
+                          exposure="1"
+                          environment-image="neutral"
+                          alt="Shark 3D model"></model-viewer>
+          </div>
+
+        </template>
+      </article>
+      <!-- PROJECT END — Shark project -->
+
+       <!-- ============================================================ -->
+      <!-- PROJECT START — Shroom                             -->
+      <!-- Duplicate this entire <article> block to add a new project.  -->
+      <!-- ============================================================ -->
+      <article class="project">
+        <div class="project-card">
+          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
+          <img src="images/shroom-thumb.jpg" alt="Shroom" class="project-img" />
+
+          <!-- HOVER VIDEO: plays on card hover -->
+          <video class="project-hover-video" src="videos/shroom-hover.mp4"
+                 muted loop playsinline preload="none"></video>
+
+          <div class="project-info">
+            <p class="project-meta">3D / Sculpture · 2025</p>
+            <h3 class="project-name">Cute Mushroom Model</h3>
+          </div>
+          <span class="project-arrow">↗</span>
+        </div>
+
+        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
+        <template class="project-details">
+          <p class="d-summary">
+            A sculpted shark study — exploring organic form, anatomy, and subsurface shading in Blender.
+          </p>
+
+          <p class="d-body">
+            Modelled from reference, retopologised for clean deformation, and shaded with a multi-layer
+            subsurface scatter to capture the translucency of cartilaginous skin under water.
+          </p>
+            <!-- BEFORE / AFTER COMPARE SLIDER
+               Replace the src values with your two images. -->
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/shroom-b.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/shroom-a.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <!-- HERO VIDEO -->
+          <video class="d-video" src="videos/shroom-vid.mp4"
+                 poster="images/shark-thumb.jpg"
+                 autoplay muted loop playsinline controls></video>
+
+          <!-- 3D MODEL -->
+          <div class="model-wrap" data-model-wrap>
+            <model-viewer class="d-model"
+                          src="models/Shroom.glb"
+                          camera-controls
+                          disable-zoom
+                          touch-action="pan-y"
+                          shadow-intensity="1"
+                          exposure="1"
+                          environment-image="neutral"
+                          alt="Shark 3D model"></model-viewer>
+          </div>
+
+        </template>
+      </article>
+      <!-- PROJECT END — Shroom Study -->
+        <!-- PROJECT START — Studio                             -->
+      <!-- Duplicate this entire <article> block to add a new project.  -->
+      <!-- ============================================================ -->
+      <article class="project">
+        <div class="project-card">
+          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
+          <img src="images/studio-thumb.jpg" alt="Studio-project" class="project-img" />
+
+          <!-- HOVER IMAGE: shows on card hover -->
+          <img class="project-hover-img" src="images/studio-hover.jpg" alt="" />
+
+          <div class="project-info">
+            <p class="project-meta">3D / Product · 2025</p>
+            <h3 class="project-name">Studio Recreation in 3D</h3>
+          </div>
+          <span class="project-arrow">↗</span>
+        </div>
+
+        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
+        <template class="project-details">
+          <p class="d-summary">
+            A sculpted shark study — exploring organic form, anatomy, and subsurface shading in Blender.
+          </p>
+
+          <p class="d-body">
+            Modelled from reference, retopologised for clean deformation, and shaded with a multi-layer
+            subsurface scatter to capture the translucency of cartilaginous skin under water.
+          </p>
+           <!-- HERO VIDEO -->
+          <video class="d-video" src="videos/studio-vid.mp4"
+                 poster="images/shark-thumb.jpg"
+                 autoplay muted loop playsinline controls></video>  
+          <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
+          <div class="d-gallery">
+            <img src="images/studio-gl-5.jpg" alt="studio-gl-1.jpg — view 1" />
+            <img src="images/studio-gl-2.jpg" alt="studio-gl-2.jpg — view 2" />
+          </div>
+          <!-- BEFORE / AFTER COMPARE SLIDER
+               Replace the src values with your two images. -->
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/KC_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  src="images/KC_a.jpeg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/LR_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  src="images/LR_a.jpeg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/RM_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  src="images/RM_a.jpeg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/RF-01-b.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/RF-01-a.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/RF-02-b.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/RF-02-a.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+
+          <!-- 3D MODEL -->
+          <div class="model-wrap" data-model-wrap data-model-modes>
+            <model-viewer class="d-model"
+                          src="models/MyStudio.glb"
+                          camera-controls
+                          disable-zoom
+                          touch-action="pan-y"
+                          shadow-intensity="1"
+                          exposure="1"
+                          environment-image="neutral"
+                          camera-orbit="0deg 75deg 100%"
+                          alt="Studio 3D model"></model-viewer>
+          </div>
+
+        </template>
+      </article>
+      <!-- PROJECT END — Mushroom Sculpting -->
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- ABOUT SECTION                                                  -->
+  <!-- EDIT YOUR BIO, SKILLS, AND PORTRAIT BELOW                      -->
+  <!-- ============================================================== -->
+  <section class="about" id="about">
+    <p class="eyebrow">About</p>
+
+    <h2 class="about-headline">
+      A studio of one. <em>Obsessed with light, form, and feeling.</em>
+    </h2>
+
+    <div class="about-grid">
+      <!-- PORTRAIT IMAGE (optional). Drop your photo into /images/portrait.jpg
+           or delete this entire <div class="about-portrait"> block. -->
+      <div class="about-portrait">
+        <img src="images/portrait.jpg" alt="Pedro Carmo portrait" />
+      </div>
+
+      <div class="about-text">
+        <!-- BIO PARAGRAPH(S) — write as many <p> tags as you want -->
+        <p>
+          I design and direct visual systems for brands, artists and product teams.
+          My work blends 3D, motion and narrative — translating abstract ideas into tactile,
+          cinematic experiences.
+        </p>
+        <p>
+          Trained as an industrial designer, I moved into CGI in 2018 and have since worked with
+          clients across fashion, fragrance, and technology. Currently based in Lisbon.
+        </p>
+
+        <!-- SKILLS / TOOLS LIST — edit, add or remove items freely -->
+        <div class="skills">
+          <h3>Tools</h3>
+          <ul>
+            <li>Blender</li>
+            <li>Cinema 4D</li>
+            <li>Octane / Redshift</li>
+            <li>After Effects</li>
+            <li>Figma</li>
+            <li>Photoshop</li>
+            <li>Substance Painter</li>
+            <li>HTML / CSS</li>
+          </ul>
+        </div>
+
+        <div class="skills">
+          <h3>Services</h3>
+          <ul>
+            <li>3D Art Direction</li>
+            <li>Product CGI</li>
+            <li>Motion Design</li>
+            <li>Brand Identity</li>
+            <li>Creative Direction</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- CONTACT / FOOTER                                               -->
+  <!-- EDIT YOUR EMAIL AND SOCIAL LINKS BELOW                         -->
+  <!-- ============================================================== -->
+  <footer class="contact" id="contact">
+    <div class="footer-grid">
+      <div>
+        <p class="eyebrow small">Elsewhere</p>
+        <ul class="social-list">
+          <!-- SOCIAL LINKS: edit URLs or remove items you don't use -->
+          <li><a href="https://instagram.com/" target="_blank" rel="noopener">Instagram ↗</a></li>
+          <li><a href="https://behance.net/" target="_blank" rel="noopener">Behance ↗</a></li>
+          <li><a href="https://vimeo.com/" target="_blank" rel="noopener">Vimeo ↗</a></li>
+          <li><a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow small">Studio</p>
+        <p>Lisbon, Portugal<br />Available worldwide</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Pedro Carmo. All rights reserved.</span>
+      <span>Made with care.</span>
+    </div>
+  </footer>
+
+  <!-- ============================================================== -->
+  <!-- PROJECT MODAL (opens when a project card is clicked)           -->
+  <!-- You should not need to edit anything inside this block.        -->
+  <!-- ============================================================== -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-panel" role="dialog" aria-modal="true">
+      <button class="modal-close" data-modal-close aria-label="Close">×</button>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
