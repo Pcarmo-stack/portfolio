@@ -21,7 +21,7 @@
   <link rel="prefetch" href="models/Shroom.glb" as="fetch" crossorigin />
 
   <!-- Your stylesheet -->
-  <link rel="stylesheet" href="style.css?v=19" />
+  <link rel="stylesheet" href="style.css?v=21" />
 
   <!-- <model-viewer> web component (used for 3D models) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -141,7 +141,7 @@
           </p>
             <!-- BEFORE / AFTER COMPARE SLIDER
                Replace the src values with your two images. -->
-          <div class="d-compare" data-compare>
+          <div class="d-compare d-wide" data-compare>
             <img class="d-compare-before" src="images/shark-d.jpg" alt="Before" />
             <img class="d-compare-after"  src="images/shark-c.jpg" alt="After" />
             <div class="d-compare-handle">
@@ -179,6 +179,9 @@
         <div class="project-card">
           <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
           <img src="images/studio-thumb.jpg" alt="Studio-project" class="project-img" />
+
+          <!-- HOVER IMAGE: shows on card hover (desktop only) -->
+          <img class="project-hover-img" src="images/studio-hover.jpg" alt="" />
 
           <div class="project-info">
             <p class="project-meta">3D / Product · 2025</p>
@@ -301,9 +304,11 @@
           </p>
             <!-- BEFORE / AFTER COMPARE SLIDER
                Replace the src values with your two images. -->
-          <div class="d-compare" data-compare>
+          <!-- d-shift-left nudges the cropped framing so the subject is centred -->
+          <div class="d-compare d-shift-left" data-compare>
             <img class="d-compare-before" src="images/shroom-b.jpg" alt="Before" />
             <img class="d-compare-after"  src="images/shroom-a.jpg" alt="After" />
+
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
               <span class="d-compare-arrow d-compare-arrow--right">›</span>
@@ -440,7 +445,10 @@
     <!-- 3D COOKIE — built by JS to avoid Safari model-viewer upgrade bug -->
     <div class="cookie-stage">
       <div id="cookie-mount" class="cookie-stage-mount"></div>
-      <p class="cookie-stage-msg" id="cookie-msg">Thank you for scrolling, here is a cookie for you & I hope to see you in the future! :)</p>
+      <div class="cookie-stage-text" id="cookie-text">
+        <p class="cookie-stage-prompt" id="cookie-prompt">Take a bite</p>
+        <p class="cookie-stage-msg" id="cookie-msg">Thank you for scrolling, here is a cookie for you &amp; I hope to see you in the future! :)</p>
+      </div>
     </div>
 
     <!-- SOCIAL LINKS -->
@@ -472,6 +480,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=20"></script>
+  <script src="script.js?v=21"></script>
 </body>
 </html>

@@ -133,7 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
       cookieMount.style.cursor = 'pointer';
       cookieMount.addEventListener('click', (e) => {
         spawnCrumbs(e.clientX, e.clientY);
-        if (cookieMsg) cookieMsg.classList.add('visible');
+        const cookieText = document.getElementById('cookie-text');
+        if (cookieText) cookieText.classList.add('bitten');
         playCrunch();
       });
     };
