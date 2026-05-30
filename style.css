@@ -421,7 +421,7 @@ p { line-height: 1.6; }
   10. WORK / PROJECT GRID
    ========================================================= */
 .work {
-  padding: 8rem var(--gutter);
+  padding: 8rem var(--gutter) 2.5rem;
   max-width: var(--max);
   margin: 0 auto;
 }
@@ -509,7 +509,7 @@ p { line-height: 1.6; }
   11. ABOUT
    ========================================================= */
 .about {
-  padding: 2rem var(--gutter) 8rem;
+  padding: 2.5rem var(--gutter) 8rem;
   max-width: var(--max);
   margin: 0 auto;
 }
