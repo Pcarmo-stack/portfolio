@@ -260,6 +260,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.touches.length >= 2) e.preventDefault();
     }, { passive: false });
 
+    /* --- rotation hint (touch only, auto-dismisses) --- */
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+      const hint = document.createElement('div');
+      hint.className = 'mv-hint';
+      hint.textContent = '↺  two fingers · rotate';
+      wrap.appendChild(hint);
+
+      let gone = false;
+      const dismiss = () => {
+        if (gone) return;
+        gone = true;
+        hint.classList.add('mv-hint--out');
+        hint.addEventListener('transitionend', () => hint.remove(), { once: true });
+      };
+      setTimeout(dismiss, 2500);
+      wrap.addEventListener('touchstart', dismiss, { once: true, passive: true });
+    }
+
     /* --- mode bar (only when data-model-modes is present) --- */
     if (!wrap.hasAttribute('data-model-modes')) return;
 

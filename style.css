@@ -544,9 +544,15 @@ p { line-height: 1.6; }
   border-radius: 12px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.015);
+  /* grid trick: row 1 = head (auto), row 2 = body (0fr collapsed → 1fr open) */
+  display: grid;
+  grid-template-rows: auto 0fr;
 }
 .resume-card:hover {
   border-color: rgba(246, 245, 241, 0.28);
+}
+.resume-card.open {
+  grid-template-rows: auto 1fr;
 }
 .resume-card-head {
   display: flex;
@@ -576,17 +582,18 @@ p { line-height: 1.6; }
   flex: 0 0 auto;
 }
 .resume-card.open .resume-toggle { color: var(--fg); }
-.resume-card.open .resume-preview { opacity: 0; }
 .resume-card-body {
-  max-height: 0;
+  /* min-height: 0 is required so 0fr actually collapses this row */
+  /* padding-bottom must NOT be set here — it prevents 0fr from fully collapsing */
+  min-height: 0;
   overflow: hidden;
   padding: 0 1.5rem;
-  opacity: 0;
 }
-.resume-card.open .resume-card-body {
-  max-height: 600px;
-  opacity: 1;
-  padding: 0 1.5rem 1.5rem;
+/* bottom spacing as a content block (not padding) so it collapses with 0fr */
+.resume-card-body::after {
+  content: '';
+  display: block;
+  height: 1.5rem;
 }
 .resume-value {
   font-size: 1rem;
@@ -915,6 +922,29 @@ p { line-height: 1.6; }
   -webkit-backdrop-filter: blur(6px);
 }
 
+/* rotation hint (injected by JS on touch devices) */
+.mv-hint {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(246, 245, 241, 0.85);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.45em 1.1em;
+  border-radius: 999px;
+  border: 1px solid rgba(246, 245, 241, 0.14);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 5;
+  opacity: 1;
+}
+
 /* keep old d-model rule for any standalone use */
 .modal-content .d-model {
   width: 100%;
@@ -1109,8 +1139,11 @@ model-viewer {
 .hero-tag, .hero-sub, .hero-actions, .scroll-cue, .hero-stats { opacity: 1 !important; }
 .hero-title .word > span { transform: none !important; }
 [data-reveal] { opacity: 1 !important; transform: none !important; }
-/* let resume cards expand smoothly */
-.resume-card-body { transition: max-height 0.4s var(--ease), opacity 0.3s var(--ease), padding 0.4s var(--ease) !important; }
-.resume-toggle, .resume-preview { transition: opacity 0.25s var(--ease) !important; }
+/* resume card grid expand — symmetric ease-in-out feels same speed opening and closing */
+.resume-card       { transition: grid-template-rows 0.28s ease-in-out !important; }
+.resume-toggle     { transition: color 0.2s ease !important; }
+/* rotation hint fade-out */
+.mv-hint { transition: opacity 0.5s ease !important; }
+.mv-hint.mv-hint--out { opacity: 0 !important; }
 .loader, .cursor, .cursor-ring { display: none !important; }
 /* cookie swap is handled entirely by JS — no CSS transitions needed here */
