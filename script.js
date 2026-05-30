@@ -143,12 +143,43 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------- HOVER VIDEOS ---------- */
-  document.querySelectorAll('.project-card').forEach((card) => {
-    const video = card.querySelector('.project-hover-video');
-    if (!video) return;
-    card.addEventListener('mouseenter', () => video.play().catch(() => {}));
-    card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
-  });
+  const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+  if (isTouch) {
+    // Mobile: autoplay each hover video while its card is on screen, pause/reset when off-screen.
+    const vids = [];
+    document.querySelectorAll('.project-card').forEach((card) => {
+      const video = card.querySelector('.project-hover-video');
+      if (!video) return;
+      video.muted = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      vids.push({ card, video });
+    });
+    if (vids.length) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const item = vids.find((v) => v.card === entry.target);
+          if (!item) return;
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+            item.video.play().catch(() => {});
+          } else {
+            item.video.pause();
+            item.video.currentTime = 0;
+          }
+        });
+      }, { threshold: [0, 0.6, 1] });
+      vids.forEach((v) => io.observe(v.card));
+    }
+  } else {
+    // Desktop: play on hover.
+    document.querySelectorAll('.project-card').forEach((card) => {
+      const video = card.querySelector('.project-hover-video');
+      if (!video) return;
+      card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+      card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+    });
+  }
 
   /* ---------- PROJECT MODAL ---------- */
   const modal = document.getElementById('modal');
@@ -303,8 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const handle = el.querySelector('.d-compare-handle');
     if (!after || !handle) return;
 
-    let dragging = false;
-
     const setPos = (x) => {
       const rect = el.getBoundingClientRect();
       const pct  = Math.min(100, Math.max(0, ((x - rect.left) / rect.width) * 100));
@@ -312,10 +341,61 @@ document.addEventListener('DOMContentLoaded', () => {
       handle.style.left    = `${pct}%`;
     };
 
-    el.addEventListener('pointerdown',  (e) => { dragging = true; el.setPointerCapture(e.pointerId); setPos(e.clientX); });
-    el.addEventListener('pointermove',  (e) => { if (dragging) setPos(e.clientX); });
-    el.addEventListener('pointerup',    ()  => { dragging = false; });
-    el.addEventListener('pointercancel',()  => { dragging = false; });
+    const touchMode = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+    if (touchMode) {
+      // Touch: don't hijack vertical scroll. Only slide when the gesture is
+      // clearly horizontal, OR when the drag starts right on the handle.
+      let active = false;     // committed to sliding
+      let decided = false;    // gesture direction resolved
+      let pid = null;
+      let startX = 0, startY = 0;
+
+      el.addEventListener('pointerdown', (e) => {
+        pid = e.pointerId;
+        startX = e.clientX;
+        startY = e.clientY;
+        decided = false;
+        active = false;
+        // Grabbing the handle directly = immediate slide.
+        if (e.target.closest('.d-compare-handle')) {
+          active = true;
+          decided = true;
+          el.setPointerCapture(pid);
+          setPos(e.clientX);
+        }
+      });
+
+      el.addEventListener('pointermove', (e) => {
+        if (e.pointerId !== pid) return;
+        if (!decided) {
+          const dx = Math.abs(e.clientX - startX);
+          const dy = Math.abs(e.clientY - startY);
+          if (dx < 8 && dy < 8) return; // wait for enough movement
+          decided = true;
+          if (dx > dy) {
+            active = true;
+            el.setPointerCapture(pid);
+          } else {
+            return; // vertical → let the page scroll
+          }
+        }
+        if (active) {
+          e.preventDefault();
+          setPos(e.clientX);
+        }
+      });
+
+      const end = () => { active = false; decided = false; pid = null; };
+      el.addEventListener('pointerup', end);
+      el.addEventListener('pointercancel', end);
+    } else {
+      let dragging = false;
+      el.addEventListener('pointerdown',  (e) => { dragging = true; el.setPointerCapture(e.pointerId); setPos(e.clientX); });
+      el.addEventListener('pointermove',  (e) => { if (dragging) setPos(e.clientX); });
+      el.addEventListener('pointerup',    ()  => { dragging = false; });
+      el.addEventListener('pointercancel',()  => { dragging = false; });
+    }
   }
 
 });
