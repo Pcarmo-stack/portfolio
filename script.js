@@ -166,20 +166,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (vids.length) {
       let current = null;
-      const io = new IntersectionObserver((entries) => {
-        // update the stored visibility ratio for each changed card
-        entries.forEach((entry) => {
-          const item = vids.find((v) => v.card === entry.target);
-          if (item) item.ratio = entry.isIntersecting ? entry.intersectionRatio : 0;
-        });
-        // pick the single most-visible card (must be at least partly on screen)
-        let best = null;
-        vids.forEach((v) => { if (v.ratio > 0.25 && (!best || v.ratio > best.ratio)) best = v; });
-        if (best === current) return;
+      const setCurrent = (item) => {
+        if (item === current) return;
         if (current) { current.video.pause(); current.video.currentTime = 0; }
-        current = best;
+        current = item;
         if (current) current.video.play().catch(() => {});
-      }, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+      };
+      // rootMargin collapses the viewport to a 1px line at its vertical center.
+      // A card "intersects" exactly when it crosses the middle of the screen.
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const item = vids.find((v) => v.card === entry.target);
+          if (item) setCurrent(item);
+        });
+      }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
       vids.forEach((v) => io.observe(v.card));
     }
   } else {
