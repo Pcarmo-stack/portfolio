@@ -456,10 +456,13 @@ p { line-height: 1.6; }
   width: 100%; height: 100%;
   object-fit: cover;
 }
+/* hover overlays hidden by default — always invisible on mobile/touch */
+.project-hover-video,
+.project-hover-img { opacity: 0; }
 /* hover overlays — desktop only */
 @media (hover: hover) and (pointer: fine) {
   .project-hover-video,
-  .project-hover-img { opacity: 0; transition: opacity 0.6s var(--ease) !important; }
+  .project-hover-img { transition: opacity 0.6s var(--ease) !important; }
   .project-card:hover .project-hover-video,
   .project-card:hover .project-hover-img,
   .project-card.is-playing .project-hover-video,
@@ -702,12 +705,7 @@ p { line-height: 1.6; }
   max-width: 36ch;
   opacity: 0;
 }
-.cookie-stage-text.bitten .cookie-stage-prompt {
-  opacity: 0;
-}
-.cookie-stage-text.bitten .cookie-stage-msg {
-  opacity: 1;
-}
+/* opacity states controlled by JS inline styles to bypass killswitch */
 
 /* crumb particles (JS-animated, not CSS transitions) */
 .crumb {
@@ -1115,7 +1113,4 @@ model-viewer {
 .resume-card-body { transition: max-height 0.4s var(--ease), opacity 0.3s var(--ease), padding 0.4s var(--ease) !important; }
 .resume-toggle, .resume-preview { transition: opacity 0.25s var(--ease) !important; }
 .loader, .cursor, .cursor-ring { display: none !important; }
-/* cookie crossfade — declared after killswitch so they win the cascade */
-/* prompt fades out (0.15s), message fades in only after prompt is fully gone (0.15s delay) */
-.cookie-stage-prompt { transition: opacity 0.15s ease !important; }
-.cookie-stage-msg    { transition: opacity 0.15s ease 0.15s !important; }
+/* cookie swap is handled entirely by JS — no CSS transitions needed here */

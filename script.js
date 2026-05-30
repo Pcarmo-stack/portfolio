@@ -131,11 +131,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // clicks fall through to the mount since mv has pointer-events:none
       cookieMount.style.cursor = 'pointer';
+      let cookieBitten = false;
       cookieMount.addEventListener('click', (e) => {
         spawnCrumbs(e.clientX, e.clientY);
-        const cookieText = document.getElementById('cookie-text');
-        if (cookieText) cookieText.classList.add('bitten');
         playCrunch();
+        if (cookieBitten) return;
+        cookieBitten = true;
+        const prompt = document.getElementById('cookie-prompt');
+        const msg    = document.getElementById('cookie-msg');
+        // Step 1: hide prompt instantly (no transition — beats the killswitch)
+        if (prompt) prompt.style.opacity = '0';
+        // Step 2: show message after prompt is fully gone
+        setTimeout(() => {
+          if (msg) msg.style.opacity = '1';
+        }, 120);
       });
     };
 
@@ -168,10 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------- HOVER VIDEOS (desktop only) ---------- */
-  const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
-
-  if (!isTouch) {
-    // Desktop: play on hover. Mobile shows the static thumbnail only.
+  if (!window.matchMedia('(hover: none), (pointer: coarse)').matches) {
     document.querySelectorAll('.project-card').forEach((card) => {
       const video = card.querySelector('.project-hover-video');
       if (!video) return;
