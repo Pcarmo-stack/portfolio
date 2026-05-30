@@ -455,16 +455,18 @@ p { line-height: 1.6; }
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  transition: transform 1.2s var(--ease), opacity 0.6s var(--ease);
 }
-.project-hover-video,
-.project-hover-img { opacity: 0; }
-.project-card:hover .project-img,
-.project-card.is-playing .project-img { transform: scale(1.06); }
-.project-card:hover .project-hover-video,
-.project-card:hover .project-hover-img,
-.project-card.is-playing .project-hover-video,
-.project-card.is-playing .project-hover-img { opacity: 1; }
+/* hover overlays — desktop only */
+@media (hover: hover) and (pointer: fine) {
+  .project-hover-video,
+  .project-hover-img { opacity: 0; transition: opacity 0.6s var(--ease) !important; }
+  .project-card:hover .project-hover-video,
+  .project-card:hover .project-hover-img,
+  .project-card.is-playing .project-hover-video,
+  .project-card.is-playing .project-hover-img { opacity: 1; }
+  .project-card:hover .project-img,
+  .project-card.is-playing .project-img { transform: scale(1.06); transition: transform 1.2s var(--ease) !important; }
+}
 
 .project-card::after {
   content: "";
@@ -1114,6 +1116,6 @@ model-viewer {
 .resume-toggle, .resume-preview { transition: opacity 0.25s var(--ease) !important; }
 .loader, .cursor, .cursor-ring { display: none !important; }
 /* cookie crossfade — declared after killswitch so they win the cascade */
-/* prompt fades out first (0.25s), message fades in after (0.25s delay) */
-.cookie-stage-prompt { transition: opacity 0.1s ease !important; }
-.cookie-stage-msg    { transition: opacity 0.75s ease 0.75s !important; }
+/* prompt fades out (0.15s), message fades in only after prompt is fully gone (0.15s delay) */
+.cookie-stage-prompt { transition: opacity 0.15s ease !important; }
+.cookie-stage-msg    { transition: opacity 0.15s ease 0.15s !important; }
