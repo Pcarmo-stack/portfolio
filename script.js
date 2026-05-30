@@ -255,6 +255,11 @@ document.addEventListener('DOMContentLoaded', () => {
     zoomBar.addEventListener('click', (e) => e.stopPropagation());
     wrap.appendChild(zoomBar);
 
+    /* --- block page scroll when 2 fingers are rotating the model --- */
+    wrap.addEventListener('touchmove', (e) => {
+      if (e.touches.length >= 2) e.preventDefault();
+    }, { passive: false });
+
     /* --- mode bar (only when data-model-modes is present) --- */
     if (!wrap.hasAttribute('data-model-modes')) return;
 
