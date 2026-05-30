@@ -102,7 +102,7 @@ p { line-height: 1.6; }
    ========================================================= */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 2rem;
   letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1115,5 +1115,5 @@ model-viewer {
 .loader, .cursor, .cursor-ring { display: none !important; }
 /* cookie crossfade — declared after killswitch so they win the cascade */
 /* prompt fades out first (0.25s), message fades in after (0.25s delay) */
-.cookie-stage-prompt { transition: opacity 0.10s ease !important; }
-.cookie-stage-msg    { transition: opacity 0.10s ease 0.25s !important; }
+.cookie-stage-prompt { transition: opacity 0.1s ease !important; }
+.cookie-stage-msg    { transition: opacity 0.75s ease 0.75s !important; }
