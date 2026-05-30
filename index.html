@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
 
   <!-- Your stylesheet -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=11" />
 
   <!-- <model-viewer> web component (used for 3D models) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -28,7 +28,7 @@
   <!-- NAVIGATION BAR                                                 -->
   <!-- ============================================================== -->
   <header class="nav">
-    <a href="#top" class="nav-logo">Pedro<span>.Carmo</span></a>
+    <a href="#top" class="nav-logo">Pedro<span>Carmo</span></a>
     <nav class="nav-links">
       <a href="#work">Projects</a>
       <a href="#about">About</a>
@@ -44,8 +44,6 @@
     <div class="hero-bg"></div>
 
     <div class="hero-inner">
-      <p class="hero-tag">
-
       <!-- CHANGE YOUR NAME HERE -->
       <h1 class="hero-title">
         <span class="word"><span>Pedro</span></span>
@@ -69,17 +67,17 @@
   <!-- ============================================================== -->
   <section class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span>3D Art Direction</span><span>✦</span>
-      <span>CGI &amp; Product Visualization</span><span>✦</span>
-      <span>Motion Design</span><span>✦</span>
-      <span>Brand Identity Systems</span><span>✦</span>
-      <span>Creative Direction</span><span>✦</span>
+      <span>3D Art Ethusiastic</span><span>✦</span>
+      <span>Professional Stickman Artist</span><span>✦</span>
+      <span>N-Gon Expert</span><span>✦</span>
+      <span>Blender Rookie</span><span>✦</span>
+      <span>Donut Enjoyer</span><span>✦</span>
       <!-- duplicate for seamless loop -->
-      <span>3D Art Direction</span><span>✦</span>
-      <span>CGI &amp; Product Visualization</span><span>✦</span>
-      <span>Motion Design</span><span>✦</span>
-      <span>Brand Identity Systems</span><span>✦</span>
-      <span>Creative Direction</span><span>✦</span>
+      <span>3D Art Ethusiastic</span><span>✦</span>
+      <span>Professional Stickman Artist</span><span>✦</span>
+      <span>N-Gon Expert</span><span>✦</span>
+      <span>Blender Rookie</span><span>✦</span>
+      <span>Donut Enjoyer</span><span>✦</span>
     </div>
   </section>
 
@@ -168,69 +166,7 @@
         </template>
       </article>
       <!-- PROJECT END — Shark project -->
-
-       <!-- ============================================================ -->
-      <!-- PROJECT START — Shroom                             -->
-      <!-- Duplicate this entire <article> block to add a new project.  -->
-      <!-- ============================================================ -->
-      <article class="project">
-        <div class="project-card">
-          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
-          <img src="images/shroom-thumb.jpg" alt="Shroom" class="project-img" />
-
-          <!-- HOVER VIDEO: plays on card hover -->
-          <video class="project-hover-video" src="videos/shroom-hover.mp4"
-                 muted loop playsinline preload="none"></video>
-
-          <div class="project-info">
-            <p class="project-meta">3D / Sculpture · 2025</p>
-            <h3 class="project-name">Cute Mushroom Model</h3>
-          </div>
-          <span class="project-arrow">↗</span>
-        </div>
-
-        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
-        <template class="project-details">
-          <p class="d-summary">
-            A sculpted shark study — exploring organic form, anatomy, and subsurface shading in Blender.
-          </p>
-
-          <p class="d-body">
-            Modelled from reference, retopologised for clean deformation, and shaded with a multi-layer
-            subsurface scatter to capture the translucency of cartilaginous skin under water.
-          </p>
-            <!-- BEFORE / AFTER COMPARE SLIDER
-               Replace the src values with your two images. -->
-          <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/shroom-b.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/shroom-a.jpg" alt="After" />
-            <div class="d-compare-handle">
-              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
-              <span class="d-compare-arrow d-compare-arrow--right">›</span>
-            </div>
-          </div>
-          <!-- HERO VIDEO -->
-          <video class="d-video" src="videos/shroom-vid.mp4"
-                 poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline controls></video>
-
-          <!-- 3D MODEL -->
-          <div class="model-wrap" data-model-wrap>
-            <model-viewer class="d-model"
-                          src="models/Shroom.glb"
-                          camera-controls
-                          disable-zoom
-                          touch-action="pan-y"
-                          shadow-intensity="1"
-                          exposure="1"
-                          environment-image="neutral"
-                          alt="Shark 3D model"></model-viewer>
-          </div>
-
-        </template>
-      </article>
-      <!-- PROJECT END — Shroom Study -->
-        <!-- PROJECT START — Studio                             -->
+<!-- PROJECT START — Studio                             -->
       <!-- Duplicate this entire <article> block to add a new project.  -->
       <!-- ============================================================ -->
       <article class="project">
@@ -311,7 +247,7 @@
           </div>
 
           <!-- 3D MODEL -->
-          <div class="model-wrap" data-model-wrap data-model-modes>
+          <div class="model-wrap" data-model-wrap>
             <model-viewer class="d-model"
                           src="models/MyStudio.glb"
                           camera-controls
@@ -326,7 +262,70 @@
 
         </template>
       </article>
-      <!-- PROJECT END — Mushroom Sculpting -->
+      <!-- PROJECT END — Studio -->
+       
+      <!-- ============================================================ -->
+      <!-- PROJECT START — Shroom                             -->
+      <!-- Duplicate this entire <article> block to add a new project.  -->
+      <!-- ============================================================ -->
+      <article class="project">
+        <div class="project-card">
+          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
+          <img src="images/shroom-thumb.jpg" alt="Shroom" class="project-img" />
+
+          <!-- HOVER VIDEO: plays on card hover -->
+          <video class="project-hover-video" src="videos/shroom-hover.mp4"
+                 muted loop playsinline preload="none"></video>
+
+          <div class="project-info">
+            <p class="project-meta">3D / Sculpture · 2025</p>
+            <h3 class="project-name">Cute Mushroom Model</h3>
+          </div>
+          <span class="project-arrow">↗</span>
+        </div>
+
+        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
+        <template class="project-details">
+          <p class="d-summary">
+            A sculpted shark study — exploring organic form, anatomy, and subsurface shading in Blender.
+          </p>
+
+          <p class="d-body">
+            Modelled from reference, retopologised for clean deformation, and shaded with a multi-layer
+            subsurface scatter to capture the translucency of cartilaginous skin under water.
+          </p>
+            <!-- BEFORE / AFTER COMPARE SLIDER
+               Replace the src values with your two images. -->
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/shroom-b.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/shroom-a.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <!-- HERO VIDEO -->
+          <video class="d-video" src="videos/shroom-vid.mp4"
+                 poster="images/shark-thumb.jpg"
+                 autoplay muted loop playsinline controls></video>
+
+          <!-- 3D MODEL -->
+          <div class="model-wrap" data-model-wrap>
+            <model-viewer class="d-model"
+                          src="models/Shroom.glb"
+                          camera-controls
+                          disable-zoom
+                          touch-action="pan-y"
+                          shadow-intensity="1"
+                          exposure="1"
+                          environment-image="neutral"
+                          alt="Shark 3D model"></model-viewer>
+          </div>
+
+        </template>
+      </article>
+      <!-- PROJECT END — Shroom Study -->
+      
     </div>
   </section>
 
@@ -335,85 +334,118 @@
   <!-- EDIT YOUR BIO, SKILLS, AND PORTRAIT BELOW                      -->
   <!-- ============================================================== -->
   <section class="about" id="about">
-    <p class="eyebrow">About</p>
 
-    <h2 class="about-headline">
-      A studio of one. <em>Obsessed with light, form, and feeling.</em>
-    </h2>
+    <div class="resume">
 
-    <div class="about-grid">
-      <!-- PORTRAIT IMAGE (optional). Drop your photo into /images/portrait.jpg
-           or delete this entire <div class="about-portrait"> block. -->
-      <div class="about-portrait">
-        <img src="images/portrait.jpg" alt="Pedro Carmo portrait" />
-      </div>
-
-      <div class="about-text">
-        <!-- BIO PARAGRAPH(S) — write as many <p> tags as you want -->
-        <p>
-          I design and direct visual systems for brands, artists and product teams.
-          My work blends 3D, motion and narrative — translating abstract ideas into tactile,
-          cinematic experiences.
-        </p>
-        <p>
-          Trained as an industrial designer, I moved into CGI in 2018 and have since worked with
-          clients across fashion, fragrance, and technology. Currently based in Lisbon.
-        </p>
-
-        <!-- SKILLS / TOOLS LIST — edit, add or remove items freely -->
-        <div class="skills">
-          <h3>Tools</h3>
-          <ul>
-            <li>Blender</li>
-            <li>Cinema 4D</li>
-            <li>Octane / Redshift</li>
-            <li>After Effects</li>
-            <li>Figma</li>
-            <li>Photoshop</li>
-            <li>Substance Painter</li>
-            <li>HTML / CSS</li>
-          </ul>
+      <!-- BIO CARD -->
+      <div class="resume-card" data-resume-card>
+        <div class="resume-card-head">
+          <span class="resume-label">Bio</span>
+          <span class="resume-preview">Multimedia student, Leeuwarden</span>
+          <span class="resume-toggle" aria-hidden="true">+</span>
         </div>
-
-        <div class="skills">
-          <h3>Services</h3>
-          <ul>
-            <li>3D Art Direction</li>
-            <li>Product CGI</li>
-            <li>Motion Design</li>
-            <li>Brand Identity</li>
-            <li>Creative Direction</li>
-          </ul>
+        <div class="resume-card-body">
+          <p class="resume-value">
+            Multimedia student based in Lisbon, Portugal — learning to bring ideas to life through 3D, motion, and design.
+          </p>
         </div>
       </div>
+
+      <!-- EDUCATION CARD -->
+      <div class="resume-card" data-resume-card>
+        <div class="resume-card-head">
+          <span class="resume-label">Education</span>
+          <span class="resume-preview">IADE — Multimedia Design</span>
+          <span class="resume-toggle" aria-hidden="true">+</span>
+        </div>
+        <div class="resume-card-body">
+          <div class="resume-entry">
+            <span class="resume-entry-title">Multimedia Design</span>
+            <span class="resume-entry-sub">IADE — 2024 → Present</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COURSES CARD -->
+      <div class="resume-card" data-resume-card>
+        <div class="resume-card-head">
+          <span class="resume-label">Courses</span>
+          <span class="resume-preview">1 course</span>
+          <span class="resume-toggle" aria-hidden="true">+</span>
+        </div>
+        <div class="resume-card-body">
+          <div class="resume-entry">
+            <span class="resume-entry-title">Fundamentals of Digital Sculpting in Blender</span>
+            <span class="resume-entry-sub">CGCookie CORE — 2025</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOOLS CARD -->
+      <div class="resume-card" data-resume-card>
+        <div class="resume-card-head">
+          <span class="resume-label">Tools</span>
+          <span class="resume-preview">6 tools</span>
+          <span class="resume-toggle" aria-hidden="true">+</span>
+        </div>
+        <div class="resume-card-body">
+          <div class="resume-value resume-tags">
+            <span>Blender</span>
+            <span>After Effects</span>
+            <span>Figma</span>
+            <span>Photoshop</span>
+            <span>Substance Painter</span>
+            <span>HTML / CSS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERESTS CARD -->
+      <div class="resume-card" data-resume-card>
+        <div class="resume-card-head">
+          <span class="resume-label">Interests</span>
+          <span class="resume-preview">4 interests</span>
+          <span class="resume-toggle" aria-hidden="true">+</span>
+        </div>
+        <div class="resume-card-body">
+          <div class="resume-value resume-tags">
+            <span>3D Sculpting</span>
+            <span>CGI</span>
+            <span>Motion Design</span>
+            <span>World Building</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
+
   <!-- ============================================================== -->
   <!-- CONTACT / FOOTER                                               -->
-  <!-- EDIT YOUR EMAIL AND SOCIAL LINKS BELOW                         -->
   <!-- ============================================================== -->
   <footer class="contact" id="contact">
-    <div class="footer-grid">
-      <div>
-        <p class="eyebrow small">Elsewhere</p>
-        <ul class="social-list">
-          <!-- SOCIAL LINKS: edit URLs or remove items you don't use -->
-          <li><a href="https://instagram.com/" target="_blank" rel="noopener">Instagram ↗</a></li>
-          <li><a href="https://behance.net/" target="_blank" rel="noopener">Behance ↗</a></li>
-          <li><a href="https://vimeo.com/" target="_blank" rel="noopener">Vimeo ↗</a></li>
-          <li><a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
-        </ul>
-      </div>
-      <div>
-        <p class="eyebrow small">Studio</p>
-        <p>Lisbon, Portugal<br />Available worldwide</p>
-      </div>
+
+    <!-- 3D COOKIE — built by JS to avoid Safari model-viewer upgrade bug -->
+    <div class="cookie-stage">
+      <div id="cookie-mount" class="cookie-stage-mount"></div>
+      <p class="cookie-stage-msg" id="cookie-msg">Thank you for scrolling, here is a cookie for you & I hope to see you in the future! :)</p>
+    </div>
+
+    <!-- SOCIAL LINKS -->
+    <div class="footer-socials">
+      <p class="eyebrow small">Socials</p>
+      <ul class="social-list social-row">
+        <li><a href="https://www.instagram.com/pedrodcarmo_/" target="_blank" rel="noopener">Instagram ↗</a></li>
+        <li><a href="https://www.behance.net/pedrocarmo5" target="_blank" rel="noopener">Behance ↗</a></li>
+        <li><a href="https://vimeo.com/user252867754" target="_blank" rel="noopener">Vimeo ↗</a></li>
+        <li><a href="https://www.linkedin.com/in/pedro-carmo-9598a5383/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+      </ul>
     </div>
 
     <div class="footer-bottom">
-      <span>© <span id="year"></span> Pedro Carmo. All rights reserved.</span>
-      <span>Made with care.</span>
+      <span>© <span id="year"></span> Pedro Carmo Student Portfolio.</span>
+      <span>Made with love</span>
     </div>
   </footer>
 
@@ -429,6 +461,6 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=13"></script>
 </body>
 </html>

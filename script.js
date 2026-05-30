@@ -8,6 +8,132 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  /* ---------- COOKIE 3D MODEL + CRUMB PARTICLES ---------- */
+  const cookieMount = document.getElementById('cookie-mount');
+  const cookieMsg   = document.getElementById('cookie-msg');
+
+  /* -- crumb particle burst at a given screen position -- */
+  function spawnCrumbs(originX, originY) {
+    const colors = ['#8B4513','#A0522D','#D2691E','#CD853F','#F4A460','#DEB887','#c8813a'];
+    const count  = 18;
+    for (let i = 0; i < count; i++) {
+      const el   = document.createElement('div');
+      el.className = 'crumb';
+      const size = 4 + Math.random() * 9;
+      el.style.cssText = [
+        `width:${size}px`, `height:${size * (0.6 + Math.random() * 0.8)}px`,
+        `background:${colors[Math.floor(Math.random() * colors.length)]}`,
+        `border-radius:${30 + Math.random() * 40}%`,
+        `left:${originX}px`, `top:${originY}px`,
+        `opacity:1`
+      ].join(';');
+      document.body.appendChild(el);
+
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 4 + Math.random() * 7;
+      let vx = Math.cos(angle) * speed;
+      let vy = Math.sin(angle) * speed - (3 + Math.random() * 4); // slight upward bias
+      let cx = originX, cy = originY, op = 1;
+
+      (function tick() {
+        vy += 0.35;       // gravity
+        vx *= 0.97;       // air drag
+        cx += vx; cy += vy;
+        op -= 0.022;
+        el.style.left    = cx + 'px';
+        el.style.top     = cy + 'px';
+        el.style.opacity = op;
+        if (op > 0) requestAnimationFrame(tick);
+        else el.remove();
+      })();
+    }
+  }
+
+  /* -- Web Audio crunch: lazy-init on first click, rich variation each time -- */
+  let audioCtx = null;
+  let crunchBuffer = null;
+
+  function playCrunch() {
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        fetch('sounds/crunch.mp3')
+          .then(r => r.arrayBuffer())
+          .then(buf => audioCtx.decodeAudioData(buf))
+          .then(decoded => { crunchBuffer = decoded; })
+          .catch(() => {});
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (!crunchBuffer) return; // buffer not loaded yet — skip silently
+
+      const src    = audioCtx.createBufferSource();
+      src.buffer   = crunchBuffer;
+      // Tiny speed change, wide pitch shift via detune (cents)
+      src.playbackRate.value = 0.97 + Math.random() * 0.06; // 0.97× – 1.03× (barely noticeable)
+      src.detune.value       = -700 + Math.random() * 1400;  // −700 to +700 cents (≈ ±7 semitones)
+
+      // Random EQ filter changes the texture each time
+      const filter   = audioCtx.createBiquadFilter();
+      const types    = ['lowpass', 'highpass', 'bandpass', 'peaking'];
+      filter.type    = types[Math.floor(Math.random() * types.length)];
+      filter.frequency.value = 300 + Math.random() * 4000; // 300 Hz – 4.3 kHz
+      filter.Q.value         = 0.4 + Math.random() * 3.5;
+      filter.gain.value      = -6 + Math.random() * 12;    // ±6 dB boost/cut
+
+      const gain        = audioCtx.createGain();
+      gain.gain.value   = 0.15 + Math.random() * 0.2; // 0.15 – 0.35 (50% quieter)
+
+      src.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      src.start();
+    } catch (e) {}
+  }
+
+  /* -- build model-viewer after custom element is ready (fixes Safari) -- */
+  if (cookieMount) {
+    const build = () => {
+      const mv = document.createElement('model-viewer');
+      mv.setAttribute('src',                 'models/cookie.glb');
+      mv.setAttribute('auto-rotate',         '');
+      mv.setAttribute('interaction-prompt',  'none');
+      mv.setAttribute('shadow-intensity',    '1');
+      mv.setAttribute('exposure',            '1');
+      mv.setAttribute('environment-image',   'neutral');
+      mv.setAttribute('alt',                 'A 3D cookie');
+      mv.style.cssText = 'display:block;width:320px;height:320px;background:#07070a;--mv-background-color:#07070a;cursor:pointer;pointer-events:none;';
+
+      cookieMount.appendChild(mv);
+
+      // clicks fall through to the mount since mv has pointer-events:none
+      cookieMount.style.cursor = 'pointer';
+      cookieMount.addEventListener('click', (e) => {
+        spawnCrumbs(e.clientX, e.clientY);
+        if (cookieMsg) cookieMsg.classList.add('visible');
+        playCrunch();
+      });
+    };
+
+    if (window.customElements && customElements.whenDefined) {
+      customElements.whenDefined('model-viewer').then(build);
+    } else {
+      build();
+    }
+  }
+
+  /* ---------- INTERACTIVE RESUME CARDS ---------- */
+  document.querySelectorAll('[data-resume-card]').forEach((card) => {
+    const head   = card.querySelector('.resume-card-head');
+    const toggle = card.querySelector('.resume-toggle');
+    if (!head) return;
+    const sync = () => { if (toggle) toggle.textContent = card.classList.contains('open') ? '−' : '+'; };
+    sync();
+    head.addEventListener('click', () => {
+      card.classList.toggle('open');
+      sync();
+    });
+  });
+
   /* ---------- STICKY NAV ---------- */
   const nav = document.querySelector('.nav');
   if (nav) {
@@ -66,15 +192,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!mv) return;
 
     /* --- zoom buttons (always shown) --- */
+    let defaultRadius = null;
+    mv.addEventListener('load', () => {
+      defaultRadius = mv.getCameraOrbit().radius;
+    });
+
     const zoomBtn = (label) => {
       const b = document.createElement('button');
       b.className = 'mv-zoom-btn';
       b.textContent = label;
       b.addEventListener('click', (e) => {
         e.stopPropagation();
-        const orbit  = mv.getCameraOrbit();
-        const factor = label === '+' ? 0.8 : 1.25;
-        const clamped = Math.min(Math.max(orbit.radius * factor, 0.1), 20);
+        const orbit   = mv.getCameraOrbit();
+        const maxOut  = defaultRadius != null ? defaultRadius * 2 : orbit.radius * 2;
+        const minIn   = defaultRadius != null ? defaultRadius * 0.3 : 0.1;
+        const factor  = label === '+' ? 0.8 : 1.25;
+        const clamped = Math.min(Math.max(orbit.radius * factor, minIn), maxOut);
         mv.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${clamped}m`;
       });
       return b;
