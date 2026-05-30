@@ -166,58 +166,11 @@ document.addEventListener('DOMContentLoaded', () => {
     onScroll();
   }
 
-  /* ---------- HOVER VIDEOS ---------- */
+  /* ---------- HOVER VIDEOS (desktop only) ---------- */
   const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
-  if (isTouch) {
-    // Mobile: exactly ONE video plays — the project nearest the screen center.
-    // Driven directly off scroll (rAF-throttled) so it tracks smoothly both
-    // up and down without the lag/misses of IntersectionObserver on fast scroll.
-    const vids = [];
-    document.querySelectorAll('.project-card').forEach((card) => {
-      const video = card.querySelector('.project-hover-video');
-      if (!video) return;
-      video.muted = true;
-      video.setAttribute('muted', '');
-      video.setAttribute('playsinline', '');
-      vids.push({ card, video });
-    });
-    if (vids.length) {
-      // Generous detection: a card plays whenever any meaningful part of it is
-      // within a big central band of the viewport. Several may play at once —
-      // the goal is simply that every project animates as you scroll past it.
-      const update = () => {
-        const vh = window.innerHeight;
-        const bandTop = vh * 0.85;   // bottom 85% of the screen counts as "in view"
-        const bandBottom = vh * 0.15; // top 15% margin
-        for (const v of vids) {
-          const r = v.card.getBoundingClientRect();
-          const visible = r.bottom > bandBottom && r.top < bandTop;
-          if (visible) {
-            v.card.classList.add('is-playing');   // reveal the video (no :hover on touch)
-            if (v.video.paused) v.video.play().catch(() => {});
-          } else {
-            v.card.classList.remove('is-playing');
-            if (!v.video.paused) {
-              v.video.pause();
-              v.video.currentTime = 0;
-            }
-          }
-        }
-      };
-
-      let ticking = false;
-      const onScroll = () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => { update(); ticking = false; });
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-      update(); // set initial state
-    }
-  } else {
-    // Desktop: play on hover.
+  if (!isTouch) {
+    // Desktop: play on hover. Mobile shows the static thumbnail only.
     document.querySelectorAll('.project-card').forEach((card) => {
       const video = card.querySelector('.project-hover-video');
       if (!video) return;

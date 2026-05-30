@@ -21,7 +21,7 @@
   <link rel="prefetch" href="models/Shroom.glb" as="fetch" crossorigin />
 
   <!-- Your stylesheet -->
-  <link rel="stylesheet" href="style.css?v=15" />
+  <link rel="stylesheet" href="style.css?v=16" />
 
   <!-- <model-viewer> web component (used for 3D models) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -49,6 +49,11 @@
     <div class="hero-bg"></div>
 
     <div class="hero-inner">
+      <p class="hero-tag">
+        <span class="line"></span>
+        3D Artist · Multimedia Designer · Based in Lisbon
+      </p>
+
       <!-- CHANGE YOUR NAME HERE -->
       <h1 class="hero-title">
         <span class="word"><span>Pedro</span></span>
@@ -58,11 +63,26 @@
       <div class="hero-bottom">
         <!-- CHANGE YOUR TAGLINE HERE -->
         <p class="hero-sub">
-          A multimedia student trying to get into the world of 3D
+          A multimedia student trying to get into the world of 3D — modelling, texturing, and learning to bring ideas to life one render at a time.
         </p>
+
+        <div class="hero-actions">
+          <a href="#work" class="btn btn-primary">View my work</a>
+          <a href="#contact" class="btn btn-ghost">Get in touch</a>
         </div>
       </div>
+
+      <ul class="hero-stats">
+        <li><strong>2024</strong><span>Started multimedia</span></li>
+        <li><strong>Blender</strong><span>Main 3D tool</span></li>
+        <li><strong>Open</strong><span>To collaborate</span></li>
+      </ul>
     </div>
+
+    <a href="#work" class="scroll-cue" aria-label="Scroll down">
+      <span>Scroll</span>
+      <span class="scroll-line"></span>
+    </a>
 
   </section>
 
@@ -338,6 +358,8 @@
   <!-- ABOUT SECTION                                                  -->
   <!-- EDIT YOUR BIO, SKILLS, AND PORTRAIT BELOW                      -->
   <!-- ============================================================== -->
+  <hr class="section-divider" />
+
   <section class="about" id="about">
 
     <h2 class="about-title">A little about me</h2>
@@ -468,6 +490,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=19"></script>
+  <script src="script.js?v=20"></script>
 </body>
 </html>
