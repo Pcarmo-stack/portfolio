@@ -689,7 +689,6 @@ p { line-height: 1.6; }
   color: rgba(246,245,241,0.85);
   margin: 0;
   opacity: 1;
-  transition: opacity 0.45s ease !important;
 }
 .cookie-stage-msg {
   font-family: var(--font-mono);
@@ -700,7 +699,6 @@ p { line-height: 1.6; }
   margin: 0;
   max-width: 36ch;
   opacity: 0;
-  transition: opacity 0.45s ease !important;
 }
 .cookie-stage-text.bitten .cookie-stage-prompt {
   opacity: 0;
@@ -1088,24 +1086,7 @@ p { line-height: 1.6; }
 /* Phones: compare sliders go vertical (4:5) so they read big, except those
    marked .d-wide (landscape content like the shark) which keep 16:9 so they're
    not cropped. Videos stay 16:9 and contained so nothing is cut off. */
-@media (max-width: 700px) {
-  .modal-content .d-video,
-  .modal-content .d-embed {
-    aspect-ratio: 16 / 9;
-  }
-  .modal-content .d-video { object-fit: contain; }
-
-  .d-compare { aspect-ratio: 4 / 5; }
-  .d-compare.d-wide { aspect-ratio: 16 / 9; }
-
-  .modal-content .d-gallery img {
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-  }
-  .model-wrap .d-model {
-    height: 60vh;
-  }
-}
+/* mobile project card layout intentionally mirrors desktop — no overrides needed */
 
 /* =========================================================
    ANIMATIONS DISABLED — kill all motion for performance
@@ -1132,3 +1113,7 @@ model-viewer {
 .resume-card-body { transition: max-height 0.4s var(--ease), opacity 0.3s var(--ease), padding 0.4s var(--ease) !important; }
 .resume-toggle, .resume-preview { transition: opacity 0.25s var(--ease) !important; }
 .loader, .cursor, .cursor-ring { display: none !important; }
+/* cookie crossfade — declared after killswitch so they win the cascade */
+/* prompt fades out first (0.25s), message fades in after (0.25s delay) */
+.cookie-stage-prompt { transition: opacity 0.25s ease !important; }
+.cookie-stage-msg    { transition: opacity 0.25s ease 0.2s !important; }
