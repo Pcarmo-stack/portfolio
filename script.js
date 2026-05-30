@@ -4,6 +4,21 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ---------- DISABLE PAGE ZOOM ON MOBILE (iOS ignores the meta tag) ---------- */
+  // Block pinch-zoom gestures…
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach((evt) => {
+    document.addEventListener(evt, (e) => e.preventDefault(), { passive: false });
+  });
+  // …and double-tap-to-zoom (but leave the 3D model viewers free to handle their own touches).
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300 && !e.target.closest('model-viewer')) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
   /* ---------- CURRENT YEAR ---------- */
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -166,36 +181,34 @@ document.addEventListener('DOMContentLoaded', () => {
       vids.push({ card, video });
     });
     if (vids.length) {
-      let current = null;
-      const setCurrent = (item) => {
-        if (item === current) return;
-        if (current) { current.video.pause(); current.video.currentTime = 0; }
-        current = item;
-        if (current) current.video.play().catch(() => {});
-      };
-
-      const pickNearest = () => {
-        const mid = window.innerHeight / 2;
-        let best = null, bestDist = Infinity;
+      // Generous detection: a card plays whenever any meaningful part of it is
+      // within a big central band of the viewport. Several may play at once —
+      // the goal is simply that every project animates as you scroll past it.
+      const update = () => {
+        const vh = window.innerHeight;
+        const bandTop = vh * 0.85;   // bottom 85% of the screen counts as "in view"
+        const bandBottom = vh * 0.15; // top 15% margin
         for (const v of vids) {
           const r = v.card.getBoundingClientRect();
-          // skip cards fully off-screen
-          if (r.bottom < 0 || r.top > window.innerHeight) continue;
-          const dist = Math.abs((r.top + r.bottom) / 2 - mid);
-          if (dist < bestDist) { bestDist = dist; best = v; }
+          const visible = r.bottom > bandBottom && r.top < bandTop;
+          if (visible) {
+            if (v.video.paused) v.video.play().catch(() => {});
+          } else if (!v.video.paused) {
+            v.video.pause();
+            v.video.currentTime = 0;
+          }
         }
-        setCurrent(best);
       };
 
       let ticking = false;
       const onScroll = () => {
         if (ticking) return;
         ticking = true;
-        requestAnimationFrame(() => { pickNearest(); ticking = false; });
+        requestAnimationFrame(() => { update(); ticking = false; });
       };
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll, { passive: true });
-      pickNearest(); // set initial state
+      update(); // set initial state
     }
   } else {
     // Desktop: play on hover.
