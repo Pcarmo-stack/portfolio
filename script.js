@@ -349,51 +349,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const touchMode = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
     if (touchMode) {
-      // Touch: don't hijack vertical scroll. Only slide when the gesture is
-      // clearly horizontal, OR when the drag starts right on the handle.
-      let active = false;     // committed to sliding
-      let decided = false;    // gesture direction resolved
-      let pid = null;
+      // Touch events with passive:false so we can preventDefault on horizontal drags.
+      // Vertical drags pass through untouched so the page scrolls normally.
+      let sliding = false, decided = false;
       let startX = 0, startY = 0;
 
-      el.addEventListener('pointerdown', (e) => {
-        pid = e.pointerId;
-        startX = e.clientX;
-        startY = e.clientY;
+      el.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        startX  = t.clientX;
+        startY  = t.clientY;
+        sliding = false;
         decided = false;
-        active = false;
-        // Grabbing the handle directly = immediate slide.
+        // Touching directly on the handle = commit immediately, no threshold.
         if (e.target.closest('.d-compare-handle')) {
-          active = true;
+          sliding = true;
           decided = true;
-          el.setPointerCapture(pid);
-          setPos(e.clientX);
-        }
-      });
-
-      el.addEventListener('pointermove', (e) => {
-        if (e.pointerId !== pid) return;
-        if (!decided) {
-          const dx = Math.abs(e.clientX - startX);
-          const dy = Math.abs(e.clientY - startY);
-          if (dx < 8 && dy < 8) return; // wait for enough movement
-          decided = true;
-          if (dx > dy) {
-            active = true;
-            el.setPointerCapture(pid);
-          } else {
-            return; // vertical → let the page scroll
-          }
-        }
-        if (active) {
+          setPos(t.clientX);
           e.preventDefault();
-          setPos(e.clientX);
         }
-      });
+      }, { passive: false });
 
-      const end = () => { active = false; decided = false; pid = null; };
-      el.addEventListener('pointerup', end);
-      el.addEventListener('pointercancel', end);
+      el.addEventListener('touchmove', (e) => {
+        const t  = e.touches[0];
+        const dx = Math.abs(t.clientX - startX);
+        const dy = Math.abs(t.clientY - startY);
+
+        if (!decided) {
+          if (dx < 5 && dy < 5) return;   // not enough movement yet
+          decided = true;
+          sliding = dx > dy;               // horizontal wins → slide
+        }
+
+        if (sliding) {
+          e.preventDefault();             // block page scroll while dragging
+          setPos(t.clientX);
+        }
+        // vertical gesture → do nothing, let browser scroll
+      }, { passive: false });
+
+      const end = () => { sliding = false; decided = false; };
+      el.addEventListener('touchend',    end);
+      el.addEventListener('touchcancel', end);
     } else {
       let dragging = false;
       el.addEventListener('pointerdown',  (e) => { dragging = true; el.setPointerCapture(e.pointerId); setPos(e.clientX); });
