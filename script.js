@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- COOKIE 3D MODEL + CRUMB PARTICLES ---------- */
   const cookieMount = document.getElementById('cookie-mount');
-  const cookieMsg   = document.getElementById('cookie-msg');
 
   /* -- crumb particle burst at a given screen position -- */
   function spawnCrumbs(originX, originY) {
@@ -168,14 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- STICKY NAV ---------- */
-  const nav = document.querySelector('.nav');
-  if (nav) {
-    const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 30);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  }
-
   /* ---------- HOVER VIDEOS (desktop only) ---------- */
   if (!window.matchMedia('(hover: none), (pointer: coarse)').matches) {
     document.querySelectorAll('.project-card').forEach((card) => {
@@ -222,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') closeModal();
   });
 
-  /* ---------- 3D MODEL VIEWER — zoom buttons + optional mode bar ---------- */
+  /* ---------- 3D MODEL VIEWER — zoom buttons + rotate cue ---------- */
   function initModelWrap(wrap) {
     const mv = wrap.querySelector('model-viewer');
     if (!mv) return;
@@ -260,100 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.touches.length >= 2) e.preventDefault();
     }, { passive: false });
 
-    /* --- rotation hint (touch only, auto-dismisses) --- */
-    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
-      const hint = document.createElement('div');
-      hint.className = 'mv-hint';
-      hint.textContent = '↺  two fingers · rotate';
-      wrap.appendChild(hint);
-
-      let gone = false;
-      const dismiss = () => {
-        if (gone) return;
-        gone = true;
-        hint.classList.add('mv-hint--out');
-        hint.addEventListener('transitionend', () => hint.remove(), { once: true });
-      };
-      setTimeout(dismiss, 2500);
-      wrap.addEventListener('touchstart', dismiss, { once: true, passive: true });
-    }
-
-    /* --- mode bar (only when data-model-modes is present) --- */
-    if (!wrap.hasAttribute('data-model-modes')) return;
-
-    const modeBar = document.createElement('div');
-    modeBar.className = 'mv-mode-bar';
-    modeBar.innerHTML = `
-      <button class="mv-mode active" data-mode="solid">No Textures</button>
-      <button class="mv-mode"        data-mode="textures">Textures</button>
-      <button class="mv-mode"        data-mode="wireframe">Wireframe</button>
-    `;
-    modeBar.addEventListener('click', (e) => e.stopPropagation());
-    wrap.appendChild(modeBar);
-
-    let originalMaterials = [];
-    let threeMeshes = [];
-    let modelReady = false;
-
-    mv.addEventListener('load', () => {
-      modelReady = true;
-      const mats = mv.model ? mv.model.materials : [];
-      originalMaterials = mats.map((m) => {
-        const pbr = m.pbrMetallicRoughness;
-        return {
-          color:     [...(pbr.baseColorFactor || [1,1,1,1])],
-          metallic:  pbr.metallicFactor  ?? 0,
-          roughness: pbr.roughnessFactor ?? 1,
-        };
-      });
-      try {
-        const sym = Object.getOwnPropertySymbols(mv).find(s => s.toString().includes('scene'));
-        if (sym && mv[sym] && mv[sym].traverse) {
-          mv[sym].traverse(node => { if (node.isMesh) threeMeshes.push(node); });
-        }
-      } catch (_) {}
-    });
-
-    modeBar.querySelectorAll('.mv-mode').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        if (!modelReady) return;
-        modeBar.querySelectorAll('.mv-mode').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const mats = mv.model ? mv.model.materials : [];
-        const mode = btn.dataset.mode;
-
-        // clear wireframe first
-        threeMeshes.forEach(mesh => {
-          [].concat(mesh.material || []).forEach(mat => { mat.wireframe = false; });
-        });
-
-        if (mode === 'solid') {
-          mats.forEach(m => {
-            m.pbrMetallicRoughness.setBaseColorFactor([0.76, 0.70, 0.64, 1]);
-            m.pbrMetallicRoughness.setMetallicFactor(0);
-            m.pbrMetallicRoughness.setRoughnessFactor(0.95);
-          });
-        } else if (mode === 'textures') {
-          mats.forEach((m, i) => {
-            const o = originalMaterials[i];
-            if (!o) return;
-            m.pbrMetallicRoughness.setBaseColorFactor(o.color);
-            m.pbrMetallicRoughness.setMetallicFactor(o.metallic);
-            m.pbrMetallicRoughness.setRoughnessFactor(o.roughness);
-          });
-        } else if (mode === 'wireframe') {
-          threeMeshes.forEach(mesh => {
-            [].concat(mesh.material || []).forEach(mat => {
-              mat.wireframe = true;
-              if (mat.color) mat.color.set('#1a1a1a');
-              mat.opacity = 1;
-              mat.transparent = false;
-            });
-          });
-        }
-      });
-    });
+    /* rotate affordance is model-viewer's own built-in hand prompt
+       (interaction-prompt), so no custom cue is injected here. */
   }
 
   /* ---------- BEFORE / AFTER COMPARE SLIDER ---------- */
