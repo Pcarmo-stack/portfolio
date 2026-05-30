@@ -153,8 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
   if (isTouch) {
-    // Mobile: only ONE video plays at a time — whichever project is most visible.
-    // As you scroll, the previous one stops and the newly-shown one starts.
+    // Mobile: exactly ONE video plays — the project nearest the screen center.
+    // Driven directly off scroll (rAF-throttled) so it tracks smoothly both
+    // up and down without the lag/misses of IntersectionObserver on fast scroll.
     const vids = [];
     document.querySelectorAll('.project-card').forEach((card) => {
       const video = card.querySelector('.project-hover-video');
@@ -162,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
       video.muted = true;
       video.setAttribute('muted', '');
       video.setAttribute('playsinline', '');
-      vids.push({ card, video, ratio: 0 });
+      vids.push({ card, video });
     });
     if (vids.length) {
       let current = null;
@@ -172,16 +173,29 @@ document.addEventListener('DOMContentLoaded', () => {
         current = item;
         if (current) current.video.play().catch(() => {});
       };
-      // rootMargin collapses the viewport to a 1px line at its vertical center.
-      // A card "intersects" exactly when it crosses the middle of the screen.
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const item = vids.find((v) => v.card === entry.target);
-          if (item) setCurrent(item);
-        });
-      }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
-      vids.forEach((v) => io.observe(v.card));
+
+      const pickNearest = () => {
+        const mid = window.innerHeight / 2;
+        let best = null, bestDist = Infinity;
+        for (const v of vids) {
+          const r = v.card.getBoundingClientRect();
+          // skip cards fully off-screen
+          if (r.bottom < 0 || r.top > window.innerHeight) continue;
+          const dist = Math.abs((r.top + r.bottom) / 2 - mid);
+          if (dist < bestDist) { bestDist = dist; best = v; }
+        }
+        setCurrent(best);
+      };
+
+      let ticking = false;
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => { pickNearest(); ticking = false; });
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      pickNearest(); // set initial state
     }
   } else {
     // Desktop: play on hover.
