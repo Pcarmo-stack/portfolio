@@ -1115,5 +1115,5 @@ model-viewer {
 .loader, .cursor, .cursor-ring { display: none !important; }
 /* cookie crossfade — declared after killswitch so they win the cascade */
 /* prompt fades out first (0.25s), message fades in after (0.25s delay) */
-.cookie-stage-prompt { transition: opacity 0.25s ease !important; }
+.cookie-stage-prompt { transition: opacity 0.10s ease !important; }
 .cookie-stage-msg    { transition: opacity 0.10s ease 0.25s !important; }
