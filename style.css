@@ -1060,20 +1060,22 @@ p { line-height: 1.6; }
   .footer-bottom { margin-top: 2.5rem; }
 }
 
-/* Phones: project media is landscape (16:9) and ends up tiny. Make the
-   in-project media taller / more vertical so it's big and easy to see. */
+/* Phones: keep landscape media (video + before/after compare) at their natural
+   16:9 so nothing is cropped or cut off, and they stay centered. The square
+   gallery stills get a taller 1:1 frame so they read big. */
 @media (max-width: 700px) {
   .modal-content .d-video,
   .modal-content .d-embed,
   .d-compare {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 9;
+  }
+  .modal-content .d-video { object-fit: contain; }
+  .modal-content .d-gallery img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
   }
   .model-wrap .d-model {
-    height: 70vh;
-  }
-  .modal-content .d-gallery img {
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
+    height: 60vh;
   }
 }
 
