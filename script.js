@@ -49,20 +49,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* -- Web Audio crunch: lazy-init on first click, rich variation each time -- */
+  /* -- Web Audio crunch: preload buffer up front so the FIRST click has sound -- */
   let audioCtx = null;
   let crunchBuffer = null;
 
+  function initAudio() {
+    if (audioCtx) return;
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      fetch('sounds/crunch.mp3')
+        .then(r => r.arrayBuffer())
+        .then(buf => audioCtx.decodeAudioData(buf))
+        .then(decoded => { crunchBuffer = decoded; })
+        .catch(() => {});
+    } catch (e) {}
+  }
+  // Decode immediately (context starts suspended until a user gesture; that's fine).
+  initAudio();
+
   function playCrunch() {
     try {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        fetch('sounds/crunch.mp3')
-          .then(r => r.arrayBuffer())
-          .then(buf => audioCtx.decodeAudioData(buf))
-          .then(decoded => { crunchBuffer = decoded; })
-          .catch(() => {});
-      }
+      initAudio();
       if (audioCtx.state === 'suspended') audioCtx.resume();
       if (!crunchBuffer) return; // buffer not loaded yet — skip silently
 
@@ -101,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mv.setAttribute('exposure',            '1');
       mv.setAttribute('environment-image',   'neutral');
       mv.setAttribute('alt',                 'A 3D cookie');
-      mv.style.cssText = 'display:block;width:320px;height:320px;background:#07070a;--mv-background-color:#07070a;cursor:pointer;pointer-events:none;';
+      mv.style.cssText = 'display:block;width:100%;height:100%;background:#07070a;--mv-background-color:#07070a;cursor:pointer;pointer-events:none;';
 
       cookieMount.appendChild(mv);
 
@@ -146,7 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
   if (isTouch) {
-    // Mobile: autoplay each hover video while its card is on screen, pause/reset when off-screen.
+    // Mobile: only ONE video plays at a time — whichever project is most visible.
+    // As you scroll, the previous one stops and the newly-shown one starts.
     const vids = [];
     document.querySelectorAll('.project-card').forEach((card) => {
       const video = card.querySelector('.project-hover-video');
@@ -154,21 +162,24 @@ document.addEventListener('DOMContentLoaded', () => {
       video.muted = true;
       video.setAttribute('muted', '');
       video.setAttribute('playsinline', '');
-      vids.push({ card, video });
+      vids.push({ card, video, ratio: 0 });
     });
     if (vids.length) {
+      let current = null;
       const io = new IntersectionObserver((entries) => {
+        // update the stored visibility ratio for each changed card
         entries.forEach((entry) => {
           const item = vids.find((v) => v.card === entry.target);
-          if (!item) return;
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-            item.video.play().catch(() => {});
-          } else {
-            item.video.pause();
-            item.video.currentTime = 0;
-          }
+          if (item) item.ratio = entry.isIntersecting ? entry.intersectionRatio : 0;
         });
-      }, { threshold: [0, 0.6, 1] });
+        // pick the single most-visible card (must be at least partly on screen)
+        let best = null;
+        vids.forEach((v) => { if (v.ratio > 0.25 && (!best || v.ratio > best.ratio)) best = v; });
+        if (best === current) return;
+        if (current) { current.video.pause(); current.video.currentTime = 0; }
+        current = best;
+        if (current) current.video.play().catch(() => {});
+      }, { threshold: [0, 0.25, 0.5, 0.75, 1] });
       vids.forEach((v) => io.observe(v.card));
     }
   } else {

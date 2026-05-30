@@ -617,8 +617,8 @@ p { line-height: 1.6; }
 }
 .cookie-stage-mount model-viewer {
   display: block;
-  width: 320px;
-  height: 320px;
+  width: 100%;
+  height: 100%;
   background-color: #07070a;
   --mv-background-color: #07070a;
   --poster-color: #07070a;
