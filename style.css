@@ -419,9 +419,12 @@ p { line-height: 1.6; }
 }
 .project-hover-video,
 .project-hover-img { opacity: 0; }
-.project-card:hover .project-img { transform: scale(1.06); }
+.project-card:hover .project-img,
+.project-card.is-playing .project-img { transform: scale(1.06); }
 .project-card:hover .project-hover-video,
-.project-card:hover .project-hover-img { opacity: 1; }
+.project-card:hover .project-hover-img,
+.project-card.is-playing .project-hover-video,
+.project-card.is-playing .project-hover-img { opacity: 1; }
 
 .project-card::after {
   content: "";
@@ -466,7 +469,7 @@ p { line-height: 1.6; }
   11. ABOUT
    ========================================================= */
 .about {
-  padding: 8rem var(--gutter);
+  padding: 2rem var(--gutter) 8rem;
   max-width: var(--max);
   margin: 0 auto;
 }
@@ -721,10 +724,16 @@ p { line-height: 1.6; }
 }
 .modal.is-open .modal-panel { transform: scale(1); }
 .modal-close {
-  position: sticky; float: right; top: 0;
+  position: sticky;
+  top: 0;
+  margin-left: auto;
+  margin-bottom: 0.5rem;
+  display: block;
+  z-index: 10;
   width: 44px; height: 44px;
   border-radius: 50%;
   border: 1px solid var(--line);
+  background: var(--bg-soft);
   font-size: 1.5rem;
   line-height: 1;
   transition: background 0.3s var(--ease);

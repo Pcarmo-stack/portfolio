@@ -9,15 +9,17 @@ document.addEventListener('DOMContentLoaded', () => {
   ['gesturestart', 'gesturechange', 'gestureend'].forEach((evt) => {
     document.addEventListener(evt, (e) => e.preventDefault(), { passive: false });
   });
-  // …and double-tap-to-zoom (but leave the 3D model viewers free to handle their own touches).
+  // …and double-tap-to-zoom everywhere, including over the 3D models.
   let lastTouchEnd = 0;
   document.addEventListener('touchend', (e) => {
     const now = Date.now();
-    if (now - lastTouchEnd <= 300 && !e.target.closest('model-viewer')) {
-      e.preventDefault();
-    }
+    if (now - lastTouchEnd <= 300) e.preventDefault();
     lastTouchEnd = now;
   }, { passive: false });
+  // Block desktop double-click on the models too.
+  document.addEventListener('dblclick', (e) => {
+    if (e.target.closest('model-viewer')) e.preventDefault();
+  });
 
   /* ---------- CURRENT YEAR ---------- */
   const yearEl = document.getElementById('year');
@@ -192,10 +194,14 @@ document.addEventListener('DOMContentLoaded', () => {
           const r = v.card.getBoundingClientRect();
           const visible = r.bottom > bandBottom && r.top < bandTop;
           if (visible) {
+            v.card.classList.add('is-playing');   // reveal the video (no :hover on touch)
             if (v.video.paused) v.video.play().catch(() => {});
-          } else if (!v.video.paused) {
-            v.video.pause();
-            v.video.currentTime = 0;
+          } else {
+            v.card.classList.remove('is-playing');
+            if (!v.video.paused) {
+              v.video.pause();
+              v.video.currentTime = 0;
+            }
           }
         }
       };
