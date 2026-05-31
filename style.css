@@ -107,7 +107,7 @@ p  { line-height: 1.6; }
   text-transform: uppercase;
   color: var(--muted);
 }
-.eyebrow.small { font-size: 0.6rem; }
+.eyebrow.small { font-size: 1.0rem; }
 
 
 /* =========================================================
@@ -360,12 +360,14 @@ p  { line-height: 1.6; }
 .resume-card.open .resume-toggle { color: var(--fg); }
 .resume-card-body {
   /* min-height: 0 is required so 0fr actually collapses this row.
-     bottom spacing is the ::after block (not padding) so it collapses too. */
+     top/bottom spacing are ::before/::after blocks (not padding) so they
+     collapse with the row — padding here would stop it closing fully. */
   min-height: 0;
   overflow: hidden;
   padding: 0 1.5rem;
 }
-.resume-card-body::after { content: ''; display: block; height: 1.5rem; }
+.resume-card-body::before { content: ''; display: block; height: 0.75rem; }
+.resume-card-body::after  { content: ''; display: block; height: 1.5rem; }
 .resume-value {
   font-size: 1rem;
   color: rgba(246,245,241,0.85);
