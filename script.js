@@ -5,17 +5,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- DISABLE PAGE ZOOM ON MOBILE (iOS ignores the meta tag) ---------- */
-  // Block pinch-zoom gestures…
+  // Block pinch-zoom gestures. (Double-tap-to-zoom is handled by
+  // `touch-action: manipulation` in the CSS — doing it here in JS would also
+  // cancel legitimate fast taps, so it's intentionally left to CSS.)
   ['gesturestart', 'gesturechange', 'gestureend'].forEach((evt) => {
     document.addEventListener(evt, (e) => e.preventDefault(), { passive: false });
   });
-  // …and double-tap-to-zoom everywhere, including over the 3D models.
-  let lastTouchEnd = 0;
-  document.addEventListener('touchend', (e) => {
-    const now = Date.now();
-    if (now - lastTouchEnd <= 300) e.preventDefault();
-    lastTouchEnd = now;
-  }, { passive: false });
   // Block desktop double-click on the models too.
   document.addEventListener('dblclick', (e) => {
     if (e.target.closest('model-viewer')) e.preventDefault();
