@@ -108,12 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
   }
 
-  /* -- build model-viewer after custom element is ready (fixes Safari) -- */
+  /* -- build model-viewer after custom element is ready (fixes Safari) --
+     Three bite stages: full → bitten → nearly gone → vanished.
+     Each click swaps to the next model while preserving the live rotation,
+     so it reads as one continuous animation. After the last bite the cookie
+     vanishes and the prompt swaps to the "one more?" message. */
   if (cookieMount) {
+    const COOKIE_STAGES = ['models/cookie-1.glb', 'models/cookie-2.glb', 'models/cookie-3.glb'];
+
     const build = () => {
       const mv = document.createElement('model-viewer');
-      mv.setAttribute('src',                 'models/cookie.glb');
+      mv.setAttribute('src',                 COOKIE_STAGES[0]);
       mv.setAttribute('auto-rotate',         '');
+      mv.setAttribute('auto-rotate-delay',   '0');   // keep spinning right after a click
       mv.setAttribute('interaction-prompt',  'none');
       mv.setAttribute('shadow-intensity',    '1');
       mv.setAttribute('exposure',            '1');
@@ -122,23 +129,60 @@ document.addEventListener('DOMContentLoaded', () => {
       mv.style.cssText = 'display:block;width:100%;height:100%;background:#07070a;--mv-background-color:#07070a;cursor:pointer;pointer-events:none;';
 
       cookieMount.appendChild(mv);
-
-      // clicks fall through to the mount since mv has pointer-events:none
       cookieMount.style.cursor = 'pointer';
-      let cookieBitten = false;
+
+      const promptEl = document.getElementById('cookie-prompt');
+      const msgEl    = document.getElementById('cookie-msg');
+
+      // Lock the camera framing from the first load: fixed target + fixed radius,
+      // so every bite-stage model is viewed from the exact same spot. Without
+      // this, model-viewer re-frames each (differently sized) model and the
+      // cookie appears to jump. With it, only the rotation differs → seamless,
+      // and the cookie visibly shrinks as it's eaten.
+      let framingLocked = false;
+      mv.addEventListener('load', () => {
+        if (framingLocked) return;
+        framingLocked = true;
+        const o = mv.getCameraOrbit();
+        const t = mv.getCameraTarget();
+        mv.setAttribute('camera-target', `${t.x}m ${t.y}m ${t.z}m`);
+        mv.setAttribute('min-camera-orbit', `auto auto ${o.radius}m`);
+        mv.setAttribute('max-camera-orbit', `auto auto ${o.radius}m`);
+      });
+
+      // Swap the model but carry the current rotation angle over → seamless.
+      const swapModel = (src) => {
+        const o = mv.getCameraOrbit();
+        mv.setAttribute('src', src);
+        mv.cameraOrbit = `${o.theta}rad ${o.phi}rad ${o.radius}m`;
+      };
+
+      const setGone = (gone) => {
+        if (promptEl) promptEl.style.opacity = gone ? '0' : '1';
+        if (msgEl)    msgEl.style.opacity    = gone ? '1' : '0';
+      };
+
+      // 0 = full, 1 = bitten, 2 = nearly gone, 3 = vanished
+      let stage = 0;
       cookieMount.addEventListener('click', (e) => {
         spawnCrumbs(e.clientX, e.clientY);
         playCrunch();
-        if (cookieBitten) return;
-        cookieBitten = true;
-        const prompt = document.getElementById('cookie-prompt');
-        const msg    = document.getElementById('cookie-msg');
-        // Step 1: hide prompt instantly (no transition — beats the killswitch)
-        if (prompt) prompt.style.opacity = '0';
-        // Step 2: show message after prompt is fully gone
-        setTimeout(() => {
-          if (msg) msg.style.opacity = '1';
-        }, 120);
+
+        if (stage >= 3) {                    // "tap for one more" → fresh cookie
+          stage = 0;
+          mv.style.visibility = 'visible';
+          swapModel(COOKIE_STAGES[0]);
+          setGone(false);
+          return;
+        }
+
+        stage++;
+        if (stage < 3) {
+          swapModel(COOKIE_STAGES[stage]);   // next bite
+        } else {
+          mv.style.visibility = 'hidden';    // all gone → vanish
+          setGone(true);
+        }
       });
     };
 

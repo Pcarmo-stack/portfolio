@@ -19,9 +19,13 @@
   <link rel="prefetch" href="models/Final_shark5.glb" as="fetch" crossorigin />
   <link rel="prefetch" href="models/MyStudio.glb" as="fetch" crossorigin />
   <link rel="prefetch" href="models/Shroom.glb" as="fetch" crossorigin />
+  <!-- cookie bite stages — prefetched so swapping models is instant/seamless -->
+  <link rel="prefetch" href="models/cookie-1.glb" as="fetch" crossorigin />
+  <link rel="prefetch" href="models/cookie-2.glb" as="fetch" crossorigin />
+  <link rel="prefetch" href="models/cookie-3.glb" as="fetch" crossorigin />
 
   <!-- Your stylesheet -->
-  <link rel="stylesheet" href="style.css?v=40" />
+  <link rel="stylesheet" href="style.css?v=42" />
 
   <!-- <model-viewer> web component (used for 3D models) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -108,67 +112,6 @@
     </div>
 
     <div class="project-grid">
-
-      <!-- ============================================================ -->
-      <!-- PROJECT START — Shark project                               -->
-      <!-- Duplicate this entire <article> block to add a new project.  -->
-      <!-- ============================================================ -->
-      <article class="project">
-        <div class="project-card">
-          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
-          <img src="images/shark-thumb.jpg" alt="Shark project" class="project-img" />
-          <video class="project-hover-video" src="videos/shark_hover.mp4" muted loop playsinline preload="auto"></video>
-
-          <div class="project-info">
-            <p class="project-meta">3D / Sculpture · 2026</p>
-            <h3 class="project-name">Shark project</h3>
-          </div>
-          <span class="project-arrow">↗</span>
-        </div>
-
-        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
-        <template class="project-details">
-          <p class="d-summary">
-            A sculpted shark study — recreation of a sketch in 3D using Blender
-          </p>
-
-          <p class="d-body">
-            Modelled after a sketch made by Alyssa Veysey, this project is the outcome of the final assigment for CGCOOKIE CORE | Fundamentals of Digital Sculpting in Blender Course.
-          </p>
-            <!-- BEFORE / AFTER COMPARE SLIDER
-               Replace the src values with your two images. -->
-          <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/shark-d.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/shark-c.jpg" alt="After" />
-            <div class="d-compare-handle">
-              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
-              <span class="d-compare-arrow d-compare-arrow--right">›</span>
-            </div>
-          </div>
-          <!-- HERO VIDEO -->
-          <video class="d-video" src="videos/shark_vid.mp4"
-                 poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline controls></video>
-
-          <!-- 3D MODEL -->
-          <div class="model-wrap" data-model-wrap>
-            <model-viewer class="d-model"
-                          src="models/Final_shark5.glb"
-                          camera-controls
-                          disable-zoom
-                          disable-pan
-                          disable-tap
-                          touch-action="pan-y"
-                          shadow-intensity="1"
-                          exposure="1"
-                          environment-image="neutral"
-                          alt="Shark 3D model"></model-viewer>
-          </div>
-
-        </template>
-      </article>
-      <!-- PROJECT END — Shark project -->
-
       <!-- ============================================================ -->
       <!-- PROJECT START — Studio                                       -->
       <!-- Duplicate this entire <article> block to add a new project.  -->
@@ -268,6 +211,66 @@
       <!-- PROJECT END — Studio -->
        
       <!-- ============================================================ -->
+      <!-- PROJECT START — Shark project                               -->
+      <!-- Duplicate this entire <article> block to add a new project.  -->
+      <!-- ============================================================ -->
+      <article class="project">
+        <div class="project-card">
+          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
+          <img src="images/shark-thumb.jpg" alt="Shark project" class="project-img" />
+          <video class="project-hover-video" src="videos/shark_hover.mp4" muted loop playsinline preload="auto"></video>
+
+          <div class="project-info">
+            <p class="project-meta">3D / Sculpture · 2026</p>
+            <h3 class="project-name">Shark project</h3>
+          </div>
+          <span class="project-arrow">↗</span>
+        </div>
+
+        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
+        <template class="project-details">
+          <p class="d-summary">
+            A sculpted shark study — recreation of a sketch in 3D using Blender
+          </p>
+
+          <p class="d-body">
+            Modelled after a sketch made by Alyssa Veysey, this project is the outcome of the final assigment for CGCOOKIE CORE | Fundamentals of Digital Sculpting in Blender Course.
+          </p>
+            <!-- BEFORE / AFTER COMPARE SLIDER
+               Replace the src values with your two images. -->
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/shark-d.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/shark-c.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <!-- HERO VIDEO -->
+          <video class="d-video" src="videos/shark_vid.mp4"
+                 poster="images/shark-thumb.jpg"
+                 autoplay muted loop playsinline controls></video>
+
+          <!-- 3D MODEL -->
+          <div class="model-wrap" data-model-wrap>
+            <model-viewer class="d-model"
+                          src="models/Final_shark5.glb"
+                          camera-controls
+                          disable-zoom
+                          disable-pan
+                          disable-tap
+                          touch-action="pan-y"
+                          shadow-intensity="1"
+                          exposure="1"
+                          environment-image="neutral"
+                          alt="Shark 3D model"></model-viewer>
+          </div>
+
+        </template>
+      </article>
+      <!-- PROJECT END — Shark project -->
+
+      <!-- ============================================================ -->
       <!-- PROJECT START — Shroom                             -->
       <!-- Duplicate this entire <article> block to add a new project.  -->
       <!-- ============================================================ -->
@@ -328,6 +331,104 @@
         </template>
       </article>
       <!-- PROJECT END — Shroom Study -->
+
+      <!-- ============================================================ -->
+      <!-- PROJECT START — Light                                       -->
+      <!-- Duplicate this entire <article> block to add a new project.  -->
+      <!-- ============================================================ -->
+      <article class="project">
+        <div class="project-card">
+          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
+          <img src="images/studio-thumb.jpg" alt="Studio-project" class="project-img" />
+          <img class="project-hover-img" src="images/studio-hover.jpg" alt="" />
+
+          <div class="project-info">
+            <p class="project-meta">3D / Product · 2026</p>
+            <h3 class="project-name">Studio Recreation in 3D</h3>
+          </div>
+          <span class="project-arrow">↗</span>
+        </div>
+
+        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
+        <template class="project-details">
+          <p class="d-summary">
+            A low poly 3D recreation of my studio in Blender
+          </p>
+
+          <p class="d-body">
+            I recreated my studio with real measurements in Blender, this project is the outcome of the final assigment for CGCOOKIE CORE | Fundamentals of 3D Mesh Modeling in Blender
+          </p>
+           <!-- HERO VIDEO -->
+          <video class="d-video" src="videos/studio-vid.mp4"
+                 poster="images/shark-thumb.jpg"
+                 autoplay muted loop playsinline controls></video>  
+          <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
+          <div class="d-gallery">
+            <img src="images/studio-gl-5.jpg" alt="studio-gl-1.jpg — view 1" />
+            <img src="images/studio-gl-2.jpg" alt="studio-gl-2.jpg — view 2" />
+          </div>
+          <!-- BEFORE / AFTER COMPARE SLIDER
+               Replace the src values with your two images. -->
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/KC_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  src="images/KC_a.jpeg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/LR_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  src="images/LR_a.jpeg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/RM_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  src="images/RM_a.jpeg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/RF-01-b.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/RF-01-a.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/RF-02-b.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/RF-02-a.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+
+          <!-- 3D MODEL -->
+          <div class="model-wrap" data-model-wrap>
+            <model-viewer class="d-model"
+                          src="models/MyStudio.glb"
+                          camera-controls
+                          disable-zoom
+                          disable-pan
+                          disable-tap
+                          touch-action="pan-y"
+                          shadow-intensity="1"
+                          exposure="1"
+                          environment-image="neutral"
+                          camera-orbit="0deg 75deg 100%"
+                          alt="Studio 3D model"></model-viewer>
+          </div>
+
+        </template>
+      </article>
+      <!-- PROJECT END — Light -->
       
     </div>
   </section>
@@ -411,7 +512,7 @@
       <div id="cookie-mount" class="cookie-stage-mount"></div>
       <div class="cookie-stage-text" id="cookie-text">
         <p class="cookie-stage-prompt" id="cookie-prompt">Take a bite</p>
-        <p class="cookie-stage-msg" id="cookie-msg">Thank you for your time and hope to see you in the future! :)</p>
+        <p class="cookie-stage-msg" id="cookie-msg">Done already? Tap for more.</p>
       </div>
     </div>
 
@@ -444,6 +545,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=40"></script>
+  <script src="script.js?v=42"></script>
 </body>
 </html>
