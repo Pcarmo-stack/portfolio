@@ -25,7 +25,7 @@
   <link rel="prefetch" href="models/cookie-3.glb" as="fetch" crossorigin />
 
   <!-- Your stylesheet -->
-  <link rel="stylesheet" href="style.css?v=42" />
+  <link rel="stylesheet" href="style.css?v=60" />
 
   <!-- <model-viewer> web component (used for 3D models) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -63,10 +63,12 @@
       <ul class="hero-stats">
         <li><strong>2025</strong><span>Started CMD</span></li>
         <li><strong>Blender</strong><span>Main Pain Point</span></li>
+        <!-- minimal scroll cue — sits right of the last stat item -->
+        <li class="hero-stats-cue">
+          <button class="hero-scroll" aria-label="Scroll to work">↓</button>
+        </li>
       </ul>
     </div>
-
-
   </section>
 
   <!-- ============================================================== -->
@@ -75,17 +77,7 @@
   <!-- ============================================================== -->
   <section class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span>3D Art Ethusiastic</span><span>✦</span>
-      <span>Professional Stickman Artist</span><span>✦</span>
-      <span>N-Gon Expert</span><span>✦</span>
-      <span>Blender Rookie</span><span>✦</span>
-      <span>Donut Enjoyer</span><span>✦</span>
-      <!-- duplicate for seamless loop -->
-      <span>3D Art Ethusiastic</span><span>✦</span>
-      <span>Professional Stickman Artist</span><span>✦</span>
-      <span>N-Gon Expert</span><span>✦</span>
-      <span>Blender Rookie</span><span>✦</span>
-      <span>Donut Enjoyer</span><span>✦</span>
+      <span>3D Art Ethusiastic</span><span>Professional Stickman Artist</span><span>N-Gon Expert</span><span>Blender Rookie</span><span>Donut Enjoyer</span><span>3D Art Ethusiastic</span><span>Professional Stickman Artist</span><span>N-Gon Expert</span><span>Blender Rookie</span><span>Donut Enjoyer</span><span>3D Art Ethusiastic</span><span>Professional Stickman Artist</span><span>N-Gon Expert</span><span>Blender Rookie</span><span>Donut Enjoyer</span><span>3D Art Ethusiastic</span><span>Professional Stickman Artist</span><span>N-Gon Expert</span><span>Blender Rookie</span><span>Donut Enjoyer</span><span>3D Art Ethusiastic</span><span>Professional Stickman Artist</span><span>N-Gon Expert</span><span>Blender Rookie</span><span>Donut Enjoyer</span><span>3D Art Ethusiastic</span><span>Professional Stickman Artist</span><span>N-Gon Expert</span><span>Blender Rookie</span><span>Donut Enjoyer</span><span>3D Art Ethusiastic</span><span>Professional Stickman Artist</span><span>N-Gon Expert</span><span>Blender Rookie</span><span>Donut Enjoyer</span><span>3D Art Ethusiastic</span><span>Professional Stickman Artist</span><span>N-Gon Expert</span><span>Blender Rookie</span><span>Donut Enjoyer</span>
     </div>
   </section>
 
@@ -141,7 +133,7 @@
            <!-- HERO VIDEO -->
           <video class="d-video" src="videos/studio-vid.mp4"
                  poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline controls></video>  
+                 autoplay muted loop playsinline></video>  
           <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
           <div class="d-gallery">
             <img src="images/studio-gl-5.jpg" alt="studio-gl-1.jpg — view 1" />
@@ -249,7 +241,7 @@
           <!-- HERO VIDEO -->
           <video class="d-video" src="videos/shark_vid.mp4"
                  poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline controls></video>
+                 autoplay muted loop playsinline></video>
 
           <!-- 3D MODEL -->
           <div class="model-wrap" data-model-wrap>
@@ -269,6 +261,58 @@
         </template>
       </article>
       <!-- PROJECT END — Shark project -->
+             <!-- ============================================================ -->
+      <!-- PROJECT START — Light                                       -->
+      <!-- Duplicate this entire <article> block to add a new project.  -->
+      <!-- ============================================================ -->
+      <article class="project">
+        <div class="project-card">
+          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
+          <img src="images/light-thumb.jpg" alt="Light-project" class="project-img" />
+          <img class="project-hover-img" src="images/light-hover.jpg" alt="" />
+
+          <div class="project-info">
+            <p class="project-meta">3D / Light · 2026</p>
+            <h3 class="project-name">Light a Scene Project</h3>
+          </div>
+          <span class="project-arrow">↗</span>
+        </div>
+
+        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
+        <template class="project-details">
+          <p class="d-summary">
+            A low poly 3D recreation of my studio in Blender
+          </p>
+
+          <p class="d-body">
+            Using a pre-existing room asset, I lighted the scene with soft shadows and cool colours in mind, this project was made for the final assigment of CGCOOKIE CORE | Fundamentals of Lighting in Blender Course.
+          </p>
+           <!-- HERO VIDEO -->
+          <video class="d-video" src="videos/light-vid2.mp4"
+                 poster="images/Final.jpg"
+                 autoplay muted loop playsinline></video>  
+          <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
+          <div class="d-gallery">
+            <img src="images/Final.jpg" alt="Final.jpg — view 1" />
+          </div>
+          <!-- BEFORE / AFTER COMPARE SLIDER
+               Replace the src values with your two images. -->
+          <div class="d-compare" data-compare>
+            <img class="d-compare-before" src="images/light_c.jpg" alt="Before" />
+            <img class="d-compare-after"  src="images/light_d.jpg" alt="After" />
+            <div class="d-compare-handle">
+              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
+              <span class="d-compare-arrow d-compare-arrow--right">›</span>
+            </div>
+          </div>
+          <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
+          <div class="d-gallery">
+            <img src="images/light-falsecolor2.jpg" alt="light-falsecolor2.jpg — view 1" />
+          </div>
+
+        </template>
+      </article>
+      <!-- PROJECT END — Light -->
 
       <!-- ============================================================ -->
       <!-- PROJECT START — Shroom                             -->
@@ -311,7 +355,7 @@
           <!-- HERO VIDEO -->
           <video class="d-video" src="videos/shroom-vid.mp4"
                  poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline controls></video>
+                 autoplay muted loop playsinline></video>
 
           <!-- 3D MODEL -->
           <div class="model-wrap" data-model-wrap>
@@ -331,104 +375,6 @@
         </template>
       </article>
       <!-- PROJECT END — Shroom Study -->
-
-      <!-- ============================================================ -->
-      <!-- PROJECT START — Light                                       -->
-      <!-- Duplicate this entire <article> block to add a new project.  -->
-      <!-- ============================================================ -->
-      <article class="project">
-        <div class="project-card">
-          <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
-          <img src="images/light-thumb.jpg" alt="Light-project" class="project-img" />
-          <img class="project-hover-img" src="images/light-hover.jpg" alt="" />
-
-          <div class="project-info">
-            <p class="project-meta">3D / Product · 2026</p>
-            <h3 class="project-name">Studio Recreation in 3D</h3>
-          </div>
-          <span class="project-arrow">↗</span>
-        </div>
-
-        <!-- HIDDEN DETAILS (opens in modal when card is clicked) -->
-        <template class="project-details">
-          <p class="d-summary">
-            A low poly 3D recreation of my studio in Blender
-          </p>
-
-          <p class="d-body">
-            I recreated my studio with real measurements in Blender, this project is the outcome of the final assigment for CGCOOKIE CORE | Fundamentals of 3D Mesh Modeling in Blender
-          </p>
-           <!-- HERO VIDEO -->
-          <video class="d-video" src="videos/light-vid.mp4"
-                 poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline controls></video>  
-          <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
-          <div class="d-gallery">
-            <img src="images/studio-gl-5.jpg" alt="studio-gl-1.jpg — view 1" />
-            <img src="images/studio-gl-2.jpg" alt="studio-gl-2.jpg — view 2" />
-          </div>
-          <!-- BEFORE / AFTER COMPARE SLIDER
-               Replace the src values with your two images. -->
-          <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/KC_b.jpeg" alt="Before" />
-            <img class="d-compare-after"  src="images/KC_a.jpeg" alt="After" />
-            <div class="d-compare-handle">
-              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
-              <span class="d-compare-arrow d-compare-arrow--right">›</span>
-            </div>
-          </div>
-          <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/LR_b.jpeg" alt="Before" />
-            <img class="d-compare-after"  src="images/LR_a.jpeg" alt="After" />
-            <div class="d-compare-handle">
-              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
-              <span class="d-compare-arrow d-compare-arrow--right">›</span>
-            </div>
-          </div>
-          <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/RM_b.jpeg" alt="Before" />
-            <img class="d-compare-after"  src="images/RM_a.jpeg" alt="After" />
-            <div class="d-compare-handle">
-              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
-              <span class="d-compare-arrow d-compare-arrow--right">›</span>
-            </div>
-          </div>
-          <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/RF-01-b.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/RF-01-a.jpg" alt="After" />
-            <div class="d-compare-handle">
-              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
-              <span class="d-compare-arrow d-compare-arrow--right">›</span>
-            </div>
-          </div>
-          <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/RF-02-b.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/RF-02-a.jpg" alt="After" />
-            <div class="d-compare-handle">
-              <span class="d-compare-arrow d-compare-arrow--left">‹</span>
-              <span class="d-compare-arrow d-compare-arrow--right">›</span>
-            </div>
-          </div>
-
-          <!-- 3D MODEL -->
-          <div class="model-wrap" data-model-wrap>
-            <model-viewer class="d-model"
-                          src="models/MyStudio.glb"
-                          camera-controls
-                          disable-zoom
-                          disable-pan
-                          disable-tap
-                          touch-action="pan-y"
-                          shadow-intensity="1"
-                          exposure="1"
-                          environment-image="neutral"
-                          camera-orbit="0deg 75deg 100%"
-                          alt="Studio 3D model"></model-viewer>
-          </div>
-
-        </template>
-      </article>
-      <!-- PROJECT END — Light -->
       
     </div>
   </section>
@@ -545,6 +491,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=42"></script>
+  <script src="script.js?v=60"></script>
 </body>
 </html>

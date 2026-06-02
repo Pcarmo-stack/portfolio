@@ -62,6 +62,33 @@ ul { list-style: none; }
 
   /* Motion */
   --ease:   cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── TYPE SCALE ──────────────────────────────────────
+     Every font-size on the site maps to one of these.
+     --ts-label  tiny mono labels, captions, footer
+     --ts-sm     secondary body, resume preview
+     --ts-base   body copy, resume entries
+     --ts-lead   hero sub, modal body
+     --ts-ui     project names, card headings
+     --ts-h2     section headings ("A little about me")
+     --ts-h1     hero display name
+  ─────────────────────────────────────────────────── */
+  --ts-label: 0.8rem;
+  --ts-sm:    0.9rem;
+  --ts-base:  1rem;
+  --ts-lead:  clamp(1.05rem, 1.35vw, 1.2rem);
+  --ts-ui:    clamp(1.45rem, 2.1vw, 1.9rem);
+  --ts-h2:    clamp(1.9rem, 4.5vw, 3rem);
+  --ts-h1:    clamp(3.25rem, 11vw, 8.5rem);
+
+  /* ── SECTION SPACING ─────────────────────────────────
+     --sp-inner  tight internal gap (between label + cards)
+     --sp-block  standard section padding top/bottom
+     --sp-hero   hero/contact outer padding
+  ─────────────────────────────────────────────────── */
+  --sp-inner: 2rem;
+  --sp-block: clamp(3.5rem, 6vw, 5.5rem);
+  --sp-hero:  clamp(4rem, 8vw, 7rem);
 }
 
 
@@ -102,12 +129,12 @@ p  { line-height: 1.6; }
    ========================================================= */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 2rem;
-  letter-spacing: 0.4em;
+  font-size: var(--ts-label);
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--muted);
 }
-.eyebrow.small { font-size: 1.0rem; }
+.eyebrow.small { font-size: var(--ts-label); letter-spacing: 0.28em; }
 
 
 /* =========================================================
@@ -118,10 +145,15 @@ p  { line-height: 1.6; }
   min-height: 78vh; min-height: 78svh;
   display: flex; align-items: center;
   padding: 4rem var(--gutter);
-  overflow: hidden;
+  /* clip-path replaces overflow:hidden — negative bottom extends the visible region
+     down through the gap so the gradient and scroll-cue reach the marquee */
+  clip-path: inset(0 0 calc(-1 * var(--sp-block) - 4rem) 0);
 }
 .hero-bg {
-  position: absolute; inset: 0;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  /* extend the gradient all the way to the marquee's border */
+  bottom: calc(-1 * var(--sp-block));
   background:
     radial-gradient(60% 60% at 20% 10%, rgba(232, 226, 212, 0.10), transparent 70%),
     radial-gradient(50% 50% at 80% 80%, rgba(126, 162, 208, 0.08), transparent 70%),
@@ -135,8 +167,8 @@ p  { line-height: 1.6; }
 .hero-tag {
   display: flex; align-items: center; gap: 0.75rem;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.4em;
+  font-size: var(--ts-label);
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 2.5rem;
@@ -146,8 +178,8 @@ p  { line-height: 1.6; }
 .hero-title {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(3.5rem, 12vw, 11rem);
-  line-height: 0.9;
+  font-size: var(--ts-h1);
+  line-height: 0.92;
   letter-spacing: -0.04em;
 }
 .hero-title .word { display: block; }
@@ -155,7 +187,7 @@ p  { line-height: 1.6; }
 
 .hero-bottom { margin-top: 3rem; }
 .hero-sub {
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-size: var(--ts-lead);
   max-width: 38ch;
   color: rgba(246, 245, 241, 0.7);
 }
@@ -163,23 +195,23 @@ p  { line-height: 1.6; }
 /* hero stats row */
 .hero-stats {
   display: flex;
-  flex-wrap: wrap;
-  gap: 2.5rem 3.5rem;
+  align-items: flex-end;
+  gap: 2rem;
   margin-top: 4rem;
-  padding-top: 2rem;
+  padding-top: 4.5rem;  /* centres text between the divider and the marquee */
   border-top: 1px solid var(--line);
 }
 .hero-stats li { display: flex; flex-direction: column; gap: 0.35rem; }
 .hero-stats strong {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-size: var(--ts-ui);
   letter-spacing: -0.02em;
 }
 .hero-stats span {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
+  font-size: var(--ts-label);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -193,26 +225,56 @@ p  { line-height: 1.6; }
   margin: 0 auto;
 }
 
+/* scroll cue li — sits right after the last stat, no push to edge */
+.hero-stats-cue {
+  display: flex;
+  align-items: flex-end;   /* aligns with the baseline of the stat labels */
+  padding-bottom: 1px;
+}
+/* minimal scroll hint — just a small muted arrow, no animation */
+.hero-scroll {
+  font-family: var(--font-mono);
+  font-size: var(--ts-label);
+  color: var(--muted);
+  line-height: 1;
+  padding: 0 0.25rem;
+  opacity: 0.6;
+}
+
 
 /* =========================================================
    6. MARQUEE
    ========================================================= */
+/* floats centred in the gap between the hero scroll-cue and "Selected Studies" */
 .marquee {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  padding: 3rem 0;
+  padding: 1.5rem 0;
   overflow: hidden;
   white-space: nowrap;
+  /* close to the hero text above, standard gap before the projects below */
+  margin-top: 2rem;
+  margin-bottom: var(--sp-block);
 }
 .marquee-track {
-  display: inline-flex; gap: 3rem;
+  display: inline-flex; gap: 0;
   font-family: var(--font-display);
   font-style: italic;
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-size: clamp(1.1rem, 2.2vw, 1.7rem);
   font-weight: 300;
   color: var(--fg);
 }
+/* ✦ separator between each word */
+.marquee-track span::after {
+  content: '✦';
+  margin: 0 0.85em;
+  color: rgba(246, 245, 241, 0.2);
+  font-style: normal;
+}
+/* alternating shades — white / grey / white / grey */
+.marquee-track span { color: var(--fg); }
 .marquee-track span:nth-child(even) { color: var(--muted); }
+/* 4 copies → always fills the widest viewport, translateX(-50%) moves 2 copies seamlessly */
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 
@@ -220,17 +282,13 @@ p  { line-height: 1.6; }
    7. WORK / PROJECT GRID
    ========================================================= */
 .work {
-  padding: 8rem var(--gutter) 2.5rem;
+  padding: 0 var(--gutter) var(--sp-block);
   max-width: var(--max);
   margin: 0 auto;
 }
 .section-head {
   display: flex; align-items: flex-end; justify-content: space-between;
-  margin-bottom: 5rem; gap: 2rem;
-}
-.section-title {
-  font-size: clamp(2.5rem, 8vw, 7rem);
-  letter-spacing: -0.03em;
+  margin-bottom: var(--sp-inner); gap: 1.5rem;
 }
 
 .project-grid {
@@ -280,14 +338,14 @@ p  { line-height: 1.6; }
 }
 .project-meta {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
+  font-size: var(--ts-label);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   opacity: 0.75;
   margin-bottom: 0.5rem;
 }
 .project-name {
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-size: var(--ts-ui);
   letter-spacing: -0.02em;
 }
 .project-arrow {
@@ -308,14 +366,14 @@ p  { line-height: 1.6; }
    8. ABOUT  (interactive resume cards)
    ========================================================= */
 .about {
-  padding: 2.5rem var(--gutter) 8rem;
+  padding: var(--sp-inner) var(--gutter) var(--sp-block);
   max-width: var(--max);
   margin: 0 auto;
 }
 .about-title {
-  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-size: var(--ts-h2);
   letter-spacing: -0.03em;
-  margin: 0 0 3rem;
+  margin: 0 0 2rem;
 }
 .resume {
   margin-top: 1.25rem;
@@ -343,13 +401,13 @@ p  { line-height: 1.6; }
 }
 .resume-label {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.35em;
+  font-size: var(--ts-label);
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--fg);
   flex: 0 0 130px;
 }
-.resume-preview { flex: 1; font-size: 0.9rem; color: var(--muted); }
+.resume-preview { flex: 1; font-size: var(--ts-sm); color: var(--muted); }
 .resume-toggle {
   font-family: var(--font-mono);
   font-size: 1.4rem;
@@ -379,7 +437,7 @@ p  { line-height: 1.6; }
 .resume-entry-sub {
   display: block;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--ts-label);
   color: var(--muted);
   margin-top: 0.25rem;
 }
@@ -397,7 +455,7 @@ p  { line-height: 1.6; }
    9. CONTACT / FOOTER  (3D cookie)
    ========================================================= */
 .contact {
-  padding: 8rem var(--gutter) 3rem;
+  padding: var(--sp-hero) var(--gutter) var(--sp-block);
   max-width: var(--max);
   margin: 0 auto;
   border-top: 1px solid var(--line);
@@ -423,6 +481,8 @@ p  { line-height: 1.6; }
   background-color: #07070a;
   --mv-background-color: #07070a;
   --poster-color: #07070a;
+  --progress-bar-height: 0px;     /* hide the loading bar that appears on model swap */
+  --progress-bar-color: transparent;
   cursor: pointer;
 }
 /* prompt + message stacked in one cell; JS crossfades via inline opacity */
@@ -430,8 +490,8 @@ p  { line-height: 1.6; }
 .cookie-stage-text > * { grid-area: 1 / 1; }
 .cookie-stage-prompt {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.18em;
+  font-size: var(--ts-label);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba(246,245,241,0.85);
   margin: 0;
@@ -439,7 +499,7 @@ p  { line-height: 1.6; }
 }
 .cookie-stage-msg {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: var(--ts-label);
   letter-spacing: 0.1em;
   color: rgba(246,245,241,0.7);
   line-height: 1.9;
@@ -468,12 +528,12 @@ p  { line-height: 1.6; }
 .social-row a:hover { opacity: 0.5; }
 
 .footer-bottom {
-  margin-top: 5rem;
+  margin-top: var(--sp-block);
   padding-top: 1.5rem;
   border-top: 1px solid var(--line);
   display: flex; justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: var(--ts-label);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
@@ -541,13 +601,15 @@ p  { line-height: 1.6; }
   letter-spacing: -0.01em;
 }
 .modal-content .d-body {
-  font-size: 1.05rem;
+  font-size: var(--ts-base);
   color: rgba(246, 245, 241, 0.7);
   margin-bottom: 2.5rem;
   max-width: 65ch;
 }
-.modal-content .d-video,
+/* video is wrapped by JS in .d-video-wrap which carries the box sizing */
+.modal-content .d-video-wrap,
 .modal-content .d-embed {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 10px;
@@ -555,8 +617,27 @@ p  { line-height: 1.6; }
   background: #000;
   margin-bottom: 1.5rem;
 }
-.modal-content .d-video { object-fit: cover; }
+.modal-content .d-video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .modal-content .d-embed iframe { width: 100%; height: 100%; border: 0; }
+/* fullscreen button — bottom-right corner of video, no other controls */
+.d-video-fs {
+  position: absolute;
+  bottom: 0.6rem;
+  right: 0.6rem;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
 .modal-content .d-gallery {
   display: flex;
   flex-direction: column;
@@ -704,26 +785,30 @@ p  { line-height: 1.6; }
     padding: 3rem 1.5rem 2rem;
   }
 
-  /* tighten section spacing for cohesion */
-  .work, .about { padding: 5rem var(--gutter); }
+  /* tighten section spacing — tokens still apply via clamp, just override padding */
+  /* .work top padding is 0 (marquee margin-bottom handles the gap) */
+  .marquee { margin-top: 1.5rem; margin-bottom: 2.5rem; }
+  .work  { padding: 0 var(--gutter) 3rem; }
+  .about { padding: 2rem  var(--gutter) 3.5rem; }
   .contact { padding: 4rem var(--gutter) 2.5rem; }
   .footer-socials { margin-top: 2.5rem; }
 }
 
 @media (max-width: 540px) {
-  .marquee { padding: 2rem 0; }
+  .marquee { padding: 1.25rem 0; margin-top: 1.25rem; margin-bottom: 2rem; }
 
   .cookie-stage-msg {
-    font-size: 0.75rem;
+    font-size: var(--ts-label);
     line-height: 1.7;
     letter-spacing: 0.06em;
     max-width: 26ch;
     padding: 0 0.5rem;
   }
   .cookie-stage-mount, .cookie-stage-mount model-viewer { width: 220px; height: 220px; }
-  .about-title { margin-bottom: 2rem; }
+  .about-title { margin-bottom: 1.5rem; }
 
-  .work, .about { padding: 4rem var(--gutter); }
+  .work  { padding: 0 var(--gutter) 2.5rem; }
+  .about { padding: 1.5rem var(--gutter) 3rem; }
   .contact { padding: 3rem var(--gutter) 2rem; }
   .footer-socials { margin-top: 2rem; }
   .footer-bottom { margin-top: 2.5rem; }
@@ -748,7 +833,8 @@ p  { line-height: 1.6; }
 ::-moz-selection { background: transparent; }
 
 /* whitelist: marquee scroll */
-.marquee-track { animation: marquee 32s linear infinite !important; }
+.marquee-track { animation: marquee 120s linear infinite !important; }
+
 /* whitelist: model-viewer needs its own transitions to reveal the model */
 model-viewer { transition: unset !important; animation: unset !important; }
 /* whitelist: resume card expand (symmetric ease feels same open/close) */

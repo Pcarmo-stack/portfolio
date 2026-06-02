@@ -2,6 +2,10 @@
    PEDRO CARMO — PORTFOLIO SCRIPT
    ================================================================= */
 
+/* always start at the top on load/refresh — browsers often restore scroll position */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.addEventListener('load', () => window.scrollTo(0, 0));
+
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- DISABLE PAGE ZOOM ON MOBILE (iOS ignores the meta tag) ---------- */
@@ -19,6 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- CURRENT YEAR ---------- */
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* ---------- SCROLL INDICATOR — no URL hash change ---------- */
+  const scrollBtn = document.querySelector('.hero-scroll');
+  if (scrollBtn) {
+    scrollBtn.addEventListener('click', () => {
+      const target = document.getElementById('work');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 
   /* ---------- COOKIE 3D MODEL + CRUMB PARTICLES ---------- */
   const cookieMount = document.getElementById('cookie-mount');
@@ -126,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mv.setAttribute('exposure',            '1');
       mv.setAttribute('environment-image',   'neutral');
       mv.setAttribute('alt',                 'A 3D cookie');
-      mv.style.cssText = 'display:block;width:100%;height:100%;background:#07070a;--mv-background-color:#07070a;cursor:pointer;pointer-events:none;';
+      mv.style.cssText = 'display:block;width:100%;height:100%;background:#07070a;--mv-background-color:#07070a;--poster-color:#07070a;--progress-bar-height:0px;--progress-bar-color:transparent;cursor:pointer;pointer-events:none;';
 
       cookieMount.appendChild(mv);
       cookieMount.style.cursor = 'pointer';
@@ -134,27 +147,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const promptEl = document.getElementById('cookie-prompt');
       const msgEl    = document.getElementById('cookie-msg');
 
-      // Lock the camera framing from the first load: fixed target + fixed radius,
-      // so every bite-stage model is viewed from the exact same spot. Without
-      // this, model-viewer re-frames each (differently sized) model and the
-      // cookie appears to jump. With it, only the rotation differs → seamless,
-      // and the cookie visibly shrinks as it's eaten.
-      let framingLocked = false;
-      mv.addEventListener('load', () => {
-        if (framingLocked) return;
-        framingLocked = true;
-        const o = mv.getCameraOrbit();
-        const t = mv.getCameraTarget();
-        mv.setAttribute('camera-target', `${t.x}m ${t.y}m ${t.z}m`);
-        mv.setAttribute('min-camera-orbit', `auto auto ${o.radius}m`);
-        mv.setAttribute('max-camera-orbit', `auto auto ${o.radius}m`);
-      });
-
-      // Swap the model but carry the current rotation angle over → seamless.
+      // Swap the model and carry the live rotation angle over so the spin
+      // appears continuous. Let model-viewer auto-frame each stage — the
+      // framing lock caused black bars around smaller bite models.
       const swapModel = (src) => {
-        const o = mv.getCameraOrbit();
+        const theta = mv.getCameraOrbit().theta;
         mv.setAttribute('src', src);
-        mv.cameraOrbit = `${o.theta}rad ${o.phi}rad ${o.radius}m`;
+        // Restore just the rotation after load so auto-framing can reset radius/target
+        mv.addEventListener('load', () => {
+          const o = mv.getCameraOrbit();
+          mv.cameraOrbit = `${theta}rad ${o.phi}rad ${o.radius}m`;
+        }, { once: true });
       };
 
       const setGone = (gone) => {
@@ -232,6 +235,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (v) v.play().catch(() => {});
     modalContent.querySelectorAll('[data-compare]').forEach(initCompare);
     modalContent.querySelectorAll('[data-model-wrap]').forEach(initModelWrap);
+
+    /* --- video fullscreen button (no other controls shown) --- */
+    modalContent.querySelectorAll('.d-video').forEach(vid => {
+      const wrap = document.createElement('div');
+      wrap.className = 'd-video-wrap';
+      vid.after(wrap);
+      wrap.appendChild(vid);
+
+      const btn = document.createElement('button');
+      btn.className = 'd-video-fs';
+      btn.setAttribute('aria-label', 'Fullscreen');
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4.5V1H4.5M8.5 1H12V4.5M12 8.5V12H8.5M4.5 12H1V8.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const req = vid.requestFullscreen || vid.webkitRequestFullscreen || vid.mozRequestFullScreen;
+        if (req) req.call(vid);
+      });
+      wrap.appendChild(btn);
+    });
   };
 
   const closeModal = () => {
