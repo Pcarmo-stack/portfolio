@@ -222,22 +222,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if (heroHeadMount && !window.matchMedia('(hover: none), (pointer: coarse)').matches) {
     const DEG = Math.PI / 180;
     const BASE_THETA = 0   * DEG;  // resting pose: face toward viewer
-    const BASE_PHI   = 105 * DEG;
-    const MAX_THETA  = 68  * DEG;  // cartoonish swing left/right
-    const MAX_PHI    = 24  * DEG;  // up/down tilt
-    const SIGN       = -1;         // -1 → cursor right = head turns left (away, like being pushed)
-
+    const BASE_PHI   = 88 * DEG;
+    const MAX_THETA  = 38  * DEG;  // horizontal swing
+    const MAX_PHI    = 14  * DEG;  // up/down tilt
     const buildHead = () => {
       const mv = document.createElement('model-viewer');
       mv.setAttribute('src',                'models/MyHeadblend.glb');
       mv.setAttribute('interaction-prompt', 'none');
-      mv.setAttribute('shadow-intensity',   '0.4');
+      mv.setAttribute('shadow-intensity',   '0');
       mv.setAttribute('exposure',           '1');
       mv.setAttribute('environment-image',  'neutral');
       mv.setAttribute('disable-zoom',       '');
       mv.setAttribute('disable-tap',        '');
       mv.setAttribute('interpolation-decay','30');
-      mv.setAttribute('camera-orbit',       '0deg 105deg auto');
+      mv.setAttribute('camera-orbit',       '0deg 88deg auto');
       mv.setAttribute('alt',                "Pedro's 3D head");
       mv.style.cssText = 'width:100%;height:100%;background:transparent;--mv-background-color:transparent;--poster-color:transparent;--progress-bar-height:0px;pointer-events:none;';
       heroHeadMount.appendChild(mv);
@@ -254,21 +252,22 @@ document.addEventListener('DOMContentLoaded', () => {
         baseRadius = mv.getCameraOrbit().radius;
       }, { once: true });
 
-      // only react while the cursor is over the model
-      heroHeadMount.addEventListener('mousemove', (e) => {
-        const rect = heroHeadMount.getBoundingClientRect();
-        const nx = ((e.clientX - rect.left)  / rect.width)  * 2 - 1;
-        const ny = ((e.clientY - rect.top)   / rect.height) * 2 - 1;
-        rawT = BASE_THETA + SIGN * nx * MAX_THETA;
+      // track cursor globally, using the head's own centre as the origin
+      document.addEventListener('mousemove', (e) => {
+        const rect   = heroHeadMount.getBoundingClientRect();
+        const headCX = rect.left + rect.width  / 2;
+        const headCY = rect.top  + rect.height / 2;
+        // normalise offset against half-viewport so the range feels consistent
+        const nx = (e.clientX - headCX) / (window.innerWidth  * 0.5);
+        const ny = (e.clientY - headCY) / (window.innerHeight * 0.5);
+        rawT = BASE_THETA - nx * MAX_THETA;
         rawP = BASE_PHI   - ny * MAX_PHI;
       }, { passive: true });
 
-      // on leave: snap target back to rest + inject a shake impulse so it
-      // wiggles back rather than gliding — like a cartoon character shaking its head
-      heroHeadMount.addEventListener('mouseleave', () => {
+      // cursor left the viewport — snap back to rest with a small shake
+      document.addEventListener('mouseleave', () => {
         rawT = BASE_THETA;
         rawP = BASE_PHI;
-        // kick velocity in a random direction; spring will carry it past resting → oscillations
         const SHAKE = 0.28;
         velT += (Math.random() * 2 - 1) * SHAKE;
         velP += (Math.random() * 2 - 1) * SHAKE * 0.4;
@@ -301,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(tick);
     };
 
-    /* align head between "Pedro Carmo" title and the "about me" tagline — re-run on resize */
+    /* align head so it's centred between the top of "Pedro Carmo" and the bottom of the tagline */
     const alignHead = () => {
       const titleEl = document.querySelector('.hero-title');
       const subEl   = document.querySelector('.hero-sub');
@@ -310,10 +309,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const heroRect  = heroEl.getBoundingClientRect();
       const titleRect = titleEl.getBoundingClientRect();
       const subRect   = subEl.getBoundingClientRect();
-      // midpoint between centre of title and centre of tagline
-      const titleCY = titleRect.top + titleRect.height / 2;
-      const subCY   = subRect.top   + subRect.height   / 2;
-      const midY    = (titleCY + subCY) / 2 - heroRect.top;
+      // span from the top edge of the title to the bottom edge of the tagline
+      const blockTop    = titleRect.top    - heroRect.top;
+      const blockBottom = subRect.bottom   - heroRect.top;
+      const midY        = (blockTop + blockBottom) / 2;
       heroHeadMount.style.top       = midY + 'px';
       heroHeadMount.style.transform = 'translateY(-50%)';
     };

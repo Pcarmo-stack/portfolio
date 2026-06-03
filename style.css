@@ -142,9 +142,9 @@ p  { line-height: 1.6; }
    ========================================================= */
 .hero {
   position: relative;
-  min-height: 78vh; min-height: 78svh;
+  min-height: 58vh; min-height: 58svh;
   display: flex; align-items: center;
-  padding: 4rem var(--gutter);
+  padding: 3rem var(--gutter);
   /* clip-path replaces overflow:hidden — negative bottom extends the visible region
      down through the gap so the gradient and scroll-cue reach the marquee */
   clip-path: inset(0 0 calc(-1 * var(--sp-block) - 4rem) 0);
@@ -167,8 +167,6 @@ p  { line-height: 1.6; }
      only the scroll button needs to be clickable */
   pointer-events: none;
 }
-.hero-scroll { pointer-events: auto; }
-
 /* 3D head — sits in the empty right side of the hero, reacts to the mouse */
 .hero-head {
   position: absolute;
@@ -209,37 +207,11 @@ p  { line-height: 1.6; }
 .hero-title .word { display: block; }
 .hero-title .word > span { display: inline-block; }
 
-.hero-bottom { margin-top: 3rem; }
+.hero-bottom { margin-top: 2rem; }
 .hero-sub {
   font-size: var(--ts-lead);
   max-width: 38ch;
   color: rgba(246, 245, 241, 0.7);
-}
-
-/* hero stats row */
-.hero-stats {
-  display: flex;
-  align-items: flex-end;
-  gap: 2rem;
-  margin-top: 4rem;
-  padding-top: 4.5rem;
-  /* divider fades out at ~55% width so it doesn't cross the head on the right */
-  border-top: none;
-  background: linear-gradient(to right, var(--line) 0%, var(--line) 52%, transparent 66%) no-repeat top / 100% 1px;
-}
-.hero-stats li { display: flex; flex-direction: column; gap: 0.35rem; }
-.hero-stats strong {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: var(--ts-ui);
-  letter-spacing: -0.02em;
-}
-.hero-stats span {
-  font-family: var(--font-mono);
-  font-size: var(--ts-label);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
 }
 
 /* section divider */
@@ -249,22 +221,6 @@ p  { line-height: 1.6; }
   background: linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent);
   max-width: var(--max);
   margin: 0 auto;
-}
-
-/* scroll cue li — sits right after the last stat, no push to edge */
-.hero-stats-cue {
-  display: flex;
-  align-items: flex-end;   /* aligns with the baseline of the stat labels */
-  padding-bottom: 1px;
-}
-/* minimal scroll hint — just a small muted arrow, no animation */
-.hero-scroll {
-  font-family: var(--font-mono);
-  font-size: 1.5rem;
-  color: var(--muted);
-  line-height: 1;
-  padding: 0 0.25rem;
-  opacity: 0.6;
 }
 
 
