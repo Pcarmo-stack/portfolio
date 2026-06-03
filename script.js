@@ -147,16 +147,32 @@ document.addEventListener('DOMContentLoaded', () => {
       const promptEl = document.getElementById('cookie-prompt');
       const msgEl    = document.getElementById('cookie-msg');
 
-      // Swap the model and carry the live rotation angle over so the spin
-      // appears continuous. Let model-viewer auto-frame each stage — the
-      // framing lock caused black bars around smaller bite models.
+      // After the first model loads, lock the camera position (target + radius + phi)
+      // so every subsequent bite-stage model is seen from the EXACT same spot.
+      // The cookie shrinks visually as it gets eaten — no re-centering.
+      let lockedTarget = null, lockedRadius = null, lockedPhi = null;
+
+      mv.addEventListener('load', () => {
+        if (lockedTarget) return;   // already locked — don't re-lock on swap loads
+        const o = mv.getCameraOrbit();
+        const t = mv.getCameraTarget();
+        lockedRadius = o.radius;
+        lockedPhi    = o.phi;
+        lockedTarget = `${t.x}m ${t.y}m ${t.z}m`;
+        // Apply the lock so model-viewer never auto-frames again
+        mv.setAttribute('camera-target',      lockedTarget);
+        mv.setAttribute('min-camera-orbit',   `auto auto ${lockedRadius}m`);
+        mv.setAttribute('max-camera-orbit',   `auto auto ${lockedRadius}m`);
+      });
+
       const swapModel = (src) => {
         const theta = mv.getCameraOrbit().theta;
         mv.setAttribute('src', src);
-        // Restore just the rotation after load so auto-framing can reset radius/target
+        // After the swap load, restore live theta (rotation kept continuous)
         mv.addEventListener('load', () => {
-          const o = mv.getCameraOrbit();
-          mv.cameraOrbit = `${theta}rad ${o.phi}rad ${o.radius}m`;
+          if (lockedRadius !== null) {
+            mv.cameraOrbit = `${theta}rad ${lockedPhi}rad ${lockedRadius}m`;
+          }
         }, { once: true });
       };
 
@@ -174,6 +190,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (stage >= 3) {                    // "tap for one more" → fresh cookie
           stage = 0;
           mv.style.visibility = 'visible';
+          // release framing lock so the fresh cookie re-frames naturally, then re-locks
+          lockedTarget = null;
+          mv.removeAttribute('camera-target');
+          mv.removeAttribute('min-camera-orbit');
+          mv.removeAttribute('max-camera-orbit');
           swapModel(COOKIE_STAGES[0]);
           setGone(false);
           return;
@@ -193,6 +214,116 @@ document.addEventListener('DOMContentLoaded', () => {
       customElements.whenDefined('model-viewer').then(build);
     } else {
       build();
+    }
+  }
+
+  /* ---------- HERO 3D HEAD — mouse-reactive "push" rotation ---------- */
+  const heroHeadMount = document.getElementById('hero-head');
+  if (heroHeadMount && !window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+    const DEG = Math.PI / 180;
+    const BASE_THETA = 0   * DEG;  // resting pose: face toward viewer
+    const BASE_PHI   = 105 * DEG;
+    const MAX_THETA  = 68  * DEG;  // cartoonish swing left/right
+    const MAX_PHI    = 24  * DEG;  // up/down tilt
+    const SIGN       = -1;         // -1 → cursor right = head turns left (away, like being pushed)
+
+    const buildHead = () => {
+      const mv = document.createElement('model-viewer');
+      mv.setAttribute('src',                'models/MyHeadblend.glb');
+      mv.setAttribute('interaction-prompt', 'none');
+      mv.setAttribute('shadow-intensity',   '0.4');
+      mv.setAttribute('exposure',           '1');
+      mv.setAttribute('environment-image',  'neutral');
+      mv.setAttribute('disable-zoom',       '');
+      mv.setAttribute('disable-tap',        '');
+      mv.setAttribute('interpolation-decay','30');
+      mv.setAttribute('camera-orbit',       '0deg 105deg auto');
+      mv.setAttribute('alt',                "Pedro's 3D head");
+      mv.style.cssText = 'width:100%;height:100%;background:transparent;--mv-background-color:transparent;--poster-color:transparent;--progress-bar-height:0px;pointer-events:none;';
+      heroHeadMount.appendChild(mv);
+
+      let baseRadius = null;
+      // raw target (set instantly by mouse), smoothed target (eases toward raw),
+      // spring state (chases smoothed target with physics)
+      let rawT = BASE_THETA, rawP = BASE_PHI;   // cursor intent
+      let tgtT = BASE_THETA, tgtP = BASE_PHI;   // smoothed intermediate
+      let curT = BASE_THETA, velT = 0;
+      let curP = BASE_PHI,   velP = 0;
+
+      mv.addEventListener('load', () => {
+        baseRadius = mv.getCameraOrbit().radius;
+      }, { once: true });
+
+      // only react while the cursor is over the model
+      heroHeadMount.addEventListener('mousemove', (e) => {
+        const rect = heroHeadMount.getBoundingClientRect();
+        const nx = ((e.clientX - rect.left)  / rect.width)  * 2 - 1;
+        const ny = ((e.clientY - rect.top)   / rect.height) * 2 - 1;
+        rawT = BASE_THETA + SIGN * nx * MAX_THETA;
+        rawP = BASE_PHI   - ny * MAX_PHI;
+      }, { passive: true });
+
+      // on leave: snap target back to rest + inject a shake impulse so it
+      // wiggles back rather than gliding — like a cartoon character shaking its head
+      heroHeadMount.addEventListener('mouseleave', () => {
+        rawT = BASE_THETA;
+        rawP = BASE_PHI;
+        // kick velocity in a random direction; spring will carry it past resting → oscillations
+        const SHAKE = 0.28;
+        velT += (Math.random() * 2 - 1) * SHAKE;
+        velP += (Math.random() * 2 - 1) * SHAKE * 0.4;
+      });
+
+      // physics loop:
+      // 1. smooth target eases toward raw cursor intent   → removes snappiness on enter
+      // 2. spring chases smoothed target with momentum    → bouncy settle + bounce-back on leave
+      const tick = () => {
+        if (baseRadius !== null) {
+          const TARGET_EASE = 0.10;   // smooth follow
+          const STIFFNESS   = 0.08;   // medium spring pull
+          const DAMPING     = 0.74;   // low enough for visible oscillations on shake
+
+          tgtT += (rawT - tgtT) * TARGET_EASE;
+          tgtP += (rawP - tgtP) * TARGET_EASE;
+
+          velT += (tgtT - curT) * STIFFNESS;
+          velT *= DAMPING;
+          curT += velT;
+
+          velP += (tgtP - curP) * STIFFNESS;
+          velP *= DAMPING;
+          curP += velP;
+
+          mv.cameraOrbit = `${curT}rad ${curP}rad ${baseRadius}m`;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    /* align head between "Pedro Carmo" title and the "about me" tagline — re-run on resize */
+    const alignHead = () => {
+      const titleEl = document.querySelector('.hero-title');
+      const subEl   = document.querySelector('.hero-sub');
+      const heroEl  = document.querySelector('.hero');
+      if (!titleEl || !subEl || !heroEl) return;
+      const heroRect  = heroEl.getBoundingClientRect();
+      const titleRect = titleEl.getBoundingClientRect();
+      const subRect   = subEl.getBoundingClientRect();
+      // midpoint between centre of title and centre of tagline
+      const titleCY = titleRect.top + titleRect.height / 2;
+      const subCY   = subRect.top   + subRect.height   / 2;
+      const midY    = (titleCY + subCY) / 2 - heroRect.top;
+      heroHeadMount.style.top       = midY + 'px';
+      heroHeadMount.style.transform = 'translateY(-50%)';
+    };
+    alignHead();
+    window.addEventListener('resize', alignHead, { passive: true });
+
+    if (window.customElements && customElements.whenDefined) {
+      customElements.whenDefined('model-viewer').then(buildHead);
+    } else {
+      buildHead();
     }
   }
 

@@ -163,6 +163,30 @@ p  { line-height: 1.6; }
 .hero-inner {
   position: relative; z-index: 2;
   width: 100%; max-width: var(--max); margin: 0 auto;
+  /* transparent to pointer events so the head behind it can receive hover;
+     only the scroll button needs to be clickable */
+  pointer-events: none;
+}
+.hero-scroll { pointer-events: auto; }
+
+/* 3D head — sits in the empty right side of the hero, reacts to the mouse */
+.hero-head {
+  position: absolute;
+  /* top + transform set by JS to align with hero-title center */
+  right: clamp(6rem, 16vw, 22rem);
+  width: clamp(220px, 26vw, 420px);
+  height: clamp(220px, 26vw, 420px);
+  z-index: 1;
+}
+.hero-head model-viewer {
+  width: 100%; height: 100%;
+  background: transparent;
+  --mv-background-color: transparent;
+  --poster-color: transparent;
+  --progress-bar-height: 0px;
+}
+@media (max-width: 1000px) {
+  .hero-head { display: none; }   /* no empty space to fill on small screens */
 }
 .hero-tag {
   display: flex; align-items: center; gap: 0.75rem;
@@ -198,8 +222,10 @@ p  { line-height: 1.6; }
   align-items: flex-end;
   gap: 2rem;
   margin-top: 4rem;
-  padding-top: 4.5rem;  /* centres text between the divider and the marquee */
-  border-top: 1px solid var(--line);
+  padding-top: 4.5rem;
+  /* divider fades out at ~55% width so it doesn't cross the head on the right */
+  border-top: none;
+  background: linear-gradient(to right, var(--line) 0%, var(--line) 52%, transparent 66%) no-repeat top / 100% 1px;
 }
 .hero-stats li { display: flex; flex-direction: column; gap: 0.35rem; }
 .hero-stats strong {
@@ -234,7 +260,7 @@ p  { line-height: 1.6; }
 /* minimal scroll hint — just a small muted arrow, no animation */
 .hero-scroll {
   font-family: var(--font-mono);
-  font-size: var(--ts-label);
+  font-size: 1.5rem;
   color: var(--muted);
   line-height: 1;
   padding: 0 0.25rem;
@@ -579,13 +605,15 @@ p  { line-height: 1.6; }
   top: 0;
   margin-left: auto;
   margin-bottom: 0.5rem;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 10;
   width: 44px; height: 44px;
   border-radius: 50%;
   border: 1px solid var(--line);
   background: var(--bg-soft);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   line-height: 1;
 }
 .modal-close:hover { background: rgba(255,255,255,0.08); }
@@ -773,16 +801,34 @@ p  { line-height: 1.6; }
   .social-row { gap: 0.5rem 1.25rem; }
   .footer-bottom { flex-direction: column; gap: 0.5rem; margin-top: 3rem; }
 
-  /* full-screen opaque sheet on mobile so the page never peeks behind it,
-     regardless of the browser toolbar showing/hiding */
+  /* full-screen opaque sheet on mobile */
   .modal { align-items: stretch; justify-content: stretch; }
   .modal-panel {
     width: 100%;
     max-width: none;
-    max-height: none;   /* fills full height via align-items: stretch */
+    /* explicit dvh height so it truly fills the visible area every time */
+    height: 100dvh;
+    max-height: 100dvh;
     border: 0;
     border-radius: 0;
-    padding: 3rem 1.5rem 2rem;
+    padding: 0;
+    /* flex column: sticky close bar on top, scrollable content below */
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-close {
+    /* take only what it needs; flex shrink-prevents it being squished */
+    flex-shrink: 0;
+    margin: 1rem 1.5rem 0 auto;
+    top: 0;
+    position: relative;   /* override sticky — it's always at the top in flex */
+  }
+  .modal-content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 1rem 1.5rem 2rem;
   }
 
   /* tighten section spacing — tokens still apply via clamp, just override padding */

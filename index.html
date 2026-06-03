@@ -23,9 +23,11 @@
   <link rel="prefetch" href="models/cookie-1.glb" as="fetch" crossorigin />
   <link rel="prefetch" href="models/cookie-2.glb" as="fetch" crossorigin />
   <link rel="prefetch" href="models/cookie-3.glb" as="fetch" crossorigin />
+  <!-- hero head model -->
+  <link rel="prefetch" href="models/MyHeadblend.glb" as="fetch" crossorigin />
 
   <!-- Your stylesheet -->
-  <link rel="stylesheet" href="style.css?v=60" />
+  <link rel="stylesheet" href="style.css?v=74" />
 
   <!-- <model-viewer> web component (used for 3D models) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -40,6 +42,9 @@
   <!-- ============================================================== -->
   <section class="hero" id="top">
     <div class="hero-bg"></div>
+
+    <!-- 3D head — fills the empty right side, reacts to mouse (built by JS) -->
+    <div class="hero-head" id="hero-head" aria-hidden="true"></div>
 
     <div class="hero-inner">
       <p class="hero-tag">
@@ -491,6 +496,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=60"></script>
+  <script src="script.js?v=73"></script>
 </body>
 </html>
