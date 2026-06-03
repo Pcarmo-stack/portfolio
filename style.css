@@ -449,6 +449,13 @@ p  { line-height: 1.6; }
   min-height: 0;
   overflow: hidden;
   padding: 0 1.5rem;
+  /* start offset + hidden so content slides down into place on open */
+  transform: translateY(-6px);
+  opacity: 0;
+}
+.resume-card.open .resume-card-body {
+  transform: translateY(0);
+  opacity: 1;
 }
 .resume-card-body::before { content: ''; display: block; height: 0.75rem; }
 .resume-card-body::after  { content: ''; display: block; height: 1.5rem; }
@@ -884,5 +891,6 @@ p  { line-height: 1.6; }
 /* whitelist: model-viewer needs its own transitions to reveal the model */
 model-viewer { transition: unset !important; animation: unset !important; }
 /* whitelist: resume card expand (symmetric ease feels same open/close) */
-.resume-card   { transition: grid-template-rows 0.28s ease-in-out !important; }
-.resume-toggle { transition: color 0.2s ease !important; }
+.resume-card      { transition: grid-template-rows 0.28s ease-in-out !important; }
+.resume-toggle    { transition: color 0.2s ease !important; }
+.resume-card-body { transition: transform 0.28s ease-in-out, opacity 0.2s ease !important; }
