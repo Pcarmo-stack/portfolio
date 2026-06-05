@@ -625,6 +625,19 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
     }, { passive: false });
 
+    /* --- scroll strips: transparent overlays on left/right edges (mobile only)
+         touch-action:pan-y on them lets vertical swipes reach the modal scroller
+         while the model centre still captures rotation touches --- */
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+      ['left', 'right'].forEach(side => {
+        const strip = document.createElement('div');
+        strip.className = `model-scroll-strip model-scroll-strip--${side}`;
+        // strips must NOT call preventDefault so scroll can propagate
+        strip.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
+        wrap.appendChild(strip);
+      });
+    }
+
     /* rotate affordance is model-viewer's own built-in hand prompt
        (interaction-prompt), so no custom cue is injected here. */
   }

@@ -895,13 +895,18 @@ p  { line-height: 1.6; }
     overscroll-behavior: contain;
     padding: 1rem 1.5rem 2rem;
   }
-  /* leave scrollable strips on the sides of the 3D model so users can
-     swipe-to-scroll the modal without touching the model area */
-  .modal-content .model-wrap {
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
-    width: calc(100% - 5rem);  /* 100% - both margins */
+  /* transparent scroll-strips overlaid on the left/right edges of the model —
+     they intercept vertical swipes for scrolling while the centre rotates */
+  .model-scroll-strip {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2.75rem;
+    z-index: 10;
+    touch-action: pan-y;   /* pass vertical swipe to modal scroll container */
+    -webkit-tap-highlight-color: transparent;
   }
+  .model-scroll-strip--left  { left:  0; border-radius: 10px 0 0 10px; }
+  .model-scroll-strip--right { right: 0; border-radius: 0 10px 10px 0; }
 
   /* tighten section spacing — tokens still apply via clamp, just override padding */
   /* .work top padding is 0 (marquee margin-bottom handles the gap) */
