@@ -186,6 +186,28 @@ p  { line-height: 1.6; }
 @media (max-width: 1000px) {
   .hero-head { display: none; }   /* no empty space to fill on small screens */
 }
+
+/* mobile scroll-following head — hidden on desktop, shown on small screens */
+.hero-head-mobile { display: none; }
+@media (max-width: 1000px) {
+  .hero-head-mobile {
+    display: block;
+    position: fixed;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: 88px;
+    height: 88px;
+    z-index: 40;          /* below the project modal (200) so it hides when one opens */
+    pointer-events: none;
+  }
+  .hero-head-mobile model-viewer {
+    width: 100%; height: 100%;
+    background: transparent;
+    --mv-background-color: transparent;
+    --poster-color: transparent;
+    --progress-bar-height: 0px;
+  }
+}
 .hero-tag {
   display: flex; align-items: center; gap: 0.75rem;
   font-family: var(--font-mono);
@@ -755,6 +777,12 @@ p  { line-height: 1.6; }
    12. RESPONSIVE
    ========================================================= */
 @media (max-width: 900px) {
+  /* hero no longer centred in a tall box — content flows top-down and sits
+     right above the marquee instead of leaving a big gap below the tagline */
+  .hero { min-height: auto; align-items: flex-start; padding: 4rem var(--gutter) 0.5rem; }
+  .hero-tag { margin-bottom: 1.75rem; }
+  .hero-bottom { margin-top: 1.5rem; }
+
   .section-head { flex-direction: column; align-items: flex-start; }
 
   .project-grid { grid-template-columns: 1fr; gap: 2rem; }

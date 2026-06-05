@@ -217,9 +217,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ---------- HERO 3D HEAD — mouse-reactive "push" rotation ---------- */
+  /* ---------- HERO 3D HEAD — mouse-reactive "push" rotation (desktop) ---------- */
   const heroHeadMount = document.getElementById('hero-head');
-  if (heroHeadMount && !window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+  const isMobileLayout = window.matchMedia('(max-width: 1000px)').matches;
+  if (heroHeadMount && !isMobileLayout && !window.matchMedia('(hover: none), (pointer: coarse)').matches) {
     const DEG = Math.PI / 180;
     const BASE_THETA = 0   * DEG;  // resting pose: face toward viewer
     const BASE_PHI   = 88 * DEG;
@@ -323,6 +324,68 @@ document.addEventListener('DOMContentLoaded', () => {
       customElements.whenDefined('model-viewer').then(buildHead);
     } else {
       buildHead();
+    }
+  }
+
+  /* ---------- MOBILE 3D HEAD — small, fixed, rotates as you scroll ---------- */
+  const mobileHeadMount = document.getElementById('hero-head-mobile');
+  if (mobileHeadMount && isMobileLayout) {
+    const DEG = Math.PI / 180;
+    const BASE_PHI    = 88 * DEG;
+    const RANGE_THETA = 55 * DEG;  // total left↔right turn across the whole page
+    const RANGE_PHI   = 12 * DEG;  // subtle up/down tilt across the page
+
+    const buildMobileHead = () => {
+      const mv = document.createElement('model-viewer');
+      mv.setAttribute('src',                'models/MyHeadblend.glb');
+      mv.setAttribute('interaction-prompt', 'none');
+      mv.setAttribute('shadow-intensity',   '0');
+      mv.setAttribute('exposure',           '1');
+      mv.setAttribute('environment-image',  'neutral');
+      mv.setAttribute('disable-zoom',       '');
+      mv.setAttribute('disable-tap',        '');
+      mv.setAttribute('camera-orbit',       '0deg 88deg auto');
+      mv.setAttribute('alt',                "Pedro's 3D head");
+      mv.style.cssText = 'width:100%;height:100%;background:transparent;--mv-background-color:transparent;--poster-color:transparent;--progress-bar-height:0px;pointer-events:none;';
+      mobileHeadMount.appendChild(mv);
+
+      let baseRadius = null;
+      let curT = 0,        velT = 0, tgtT = 0;
+      let curP = BASE_PHI, velP = 0, tgtP = BASE_PHI;
+
+      mv.addEventListener('load', () => {
+        baseRadius = mv.getCameraOrbit().radius;
+      }, { once: true });
+
+      // map scroll progress (0 at top → 1 at bottom) onto a left↔right turn
+      const updateTarget = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const p   = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        const s   = p * 2 - 1;            // -1 at top, +1 at bottom
+        tgtT = -s * RANGE_THETA;
+        tgtP = BASE_PHI - s * RANGE_PHI;
+      };
+      updateTarget();
+      window.addEventListener('scroll',  updateTarget, { passive: true });
+      window.addEventListener('resize',  updateTarget, { passive: true });
+
+      // spring loop → smooth, slightly bouncy follow as the scroll target moves
+      const tick = () => {
+        if (baseRadius !== null) {
+          const STIFFNESS = 0.08, DAMPING = 0.8;
+          velT += (tgtT - curT) * STIFFNESS; velT *= DAMPING; curT += velT;
+          velP += (tgtP - curP) * STIFFNESS; velP *= DAMPING; curP += velP;
+          mv.cameraOrbit = `${curT}rad ${curP}rad ${baseRadius}m`;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    if (window.customElements && customElements.whenDefined) {
+      customElements.whenDefined('model-viewer').then(buildMobileHead);
+    } else {
+      buildMobileHead();
     }
   }
 

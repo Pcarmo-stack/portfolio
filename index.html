@@ -27,7 +27,7 @@
   <link rel="prefetch" href="models/MyHeadblend.glb" as="fetch" crossorigin />
 
   <!-- Your stylesheet -->
-  <link rel="stylesheet" href="style.css?v=75" />
+  <link rel="stylesheet" href="style.css?v=76" />
 
   <!-- <model-viewer> web component (used for 3D models) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -35,6 +35,9 @@
 
 <body>
 
+  <!-- Mobile-only 3D head — small, fixed, rotates as you scroll (built by JS).
+       Lives outside .hero so the hero's clip-path doesn't clip it. -->
+  <div class="hero-head-mobile" id="hero-head-mobile" aria-hidden="true"></div>
 
   <!-- ============================================================== -->
   <!-- HERO SECTION                                                   -->
@@ -420,6 +423,27 @@
           </div>
         </div>
         
+      </div>
+
+      <!-- TOOLS CARD -->
+      <div class="resume-card" data-resume-card>
+        <div class="resume-card-head">
+          <span class="resume-label">Tools</span>
+          <span class="resume-preview">Blender & the Adobe Suite</span>
+          <span class="resume-toggle" aria-hidden="true">+</span>
+        </div>
+        <div class="resume-card-body">
+          <div class="resume-value resume-tags">
+            <span>Blender</span>
+            <span>Cinema 4D</span>
+            <span>Photoshop</span>
+            <span>Illustrator</span>
+            <span>After Effects</span>
+            <span>Premiere Pro</span>
+            <span>Figma</span>
+            <span>InDesign</span>
+          </div>
+        </div>
       </div>
 
       <!-- INTERESTS CARD -->
