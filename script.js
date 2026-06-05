@@ -438,20 +438,27 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.appendChild(lightbox);
   const lightboxImg = lightbox.querySelector('img');
 
+  let lbOpenedAt = 0;
   const openLightbox = (src, alt) => {
     if (!src) return;
     lightboxImg.src = src;
     lightboxImg.alt = alt || '';
     lightbox.classList.add('is-open');
     lightbox.setAttribute('aria-hidden', 'false');
+    lbOpenedAt = Date.now();
   };
   const closeLightbox = () => {
     lightbox.classList.remove('is-open');
     lightbox.setAttribute('aria-hidden', 'true');
     lightboxImg.removeAttribute('src');
   };
-  // tap anywhere on the overlay (image, backdrop, or close button) dismisses it
-  lightbox.addEventListener('click', closeLightbox);
+  // tap anywhere on the overlay (image, backdrop, or close button) dismisses it.
+  // Ignore taps in the first 400ms — on mobile the opening tap fires a delayed
+  // "ghost click" at the same spot that would otherwise close it instantly.
+  lightbox.addEventListener('click', () => {
+    if (Date.now() - lbOpenedAt < 400) return;
+    closeLightbox();
+  });
 
   // expand icon used on gallery images (matches the video fullscreen button)
   const FS_ICON = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4.5V1H4.5M8.5 1H12V4.5M12 8.5V12H8.5M4.5 12H1V8.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -486,8 +493,16 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4.5V1H4.5M8.5 1H12V4.5M12 8.5V12H8.5M4.5 12H1V8.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const req = vid.requestFullscreen || vid.webkitRequestFullscreen || vid.mozRequestFullScreen;
-        if (req) req.call(vid);
+        // iOS Safari <video> only supports webkitEnterFullscreen (no Element fullscreen API)
+        if (vid.webkitEnterFullscreen && !document.fullscreenEnabled) {
+          vid.webkitEnterFullscreen();
+        } else if (vid.requestFullscreen) {
+          vid.requestFullscreen();
+        } else if (vid.webkitRequestFullscreen) {
+          vid.webkitRequestFullscreen();
+        } else if (vid.webkitEnterFullscreen) {
+          vid.webkitEnterFullscreen();
+        }
       });
       wrap.appendChild(btn);
     });
@@ -505,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.innerHTML = FS_ICON;
       fig.appendChild(btn);
 
-      const open = (e) => { e.stopPropagation(); openLightbox(img.currentSrc || img.src, img.alt); };
+      const open = (e) => { e.preventDefault(); e.stopPropagation(); openLightbox(img.currentSrc || img.src, img.alt); };
       img.addEventListener('click', open);
       btn.addEventListener('click', open);
     });
