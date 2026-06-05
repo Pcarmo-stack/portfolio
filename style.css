@@ -193,10 +193,11 @@ p  { line-height: 1.6; }
   .hero-head-mobile {
     display: block;
     position: fixed;
-    right: 0.75rem;
-    bottom: 0.75rem;
-    width: 88px;
-    height: 88px;
+    right: 0.5rem;
+    top: 150px;            /* precise value set by JS to match the title's line */
+    transform: translateY(-50%);
+    width: 118px;
+    height: 118px;
     z-index: 40;          /* below the project modal (200) so it hides when one opens */
     pointer-events: none;
   }

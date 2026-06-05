@@ -327,13 +327,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ---------- MOBILE 3D HEAD — small, fixed, rotates as you scroll ---------- */
+  /* ---------- MOBILE 3D HEAD — sits by the title, looks down as you scroll ---------- */
   const mobileHeadMount = document.getElementById('hero-head-mobile');
   if (mobileHeadMount && isMobileLayout) {
     const DEG = Math.PI / 180;
-    const BASE_PHI    = 88 * DEG;
-    const RANGE_THETA = 55 * DEG;  // total left↔right turn across the whole page
-    const RANGE_PHI   = 12 * DEG;  // subtle up/down tilt across the page
+    const BASE_PHI  = 88 * DEG;
+    const LOOK_DOWN = 38 * DEG;  // how far it tilts down by the bottom of the page
+
+    // keep the fixed head vertically aligned with the "Pedro Carmo" title line
+    const alignMobileHead = () => {
+      const titleEl = document.querySelector('.hero-title');
+      if (!titleEl) return;
+      const r = titleEl.getBoundingClientRect();
+      // document-space centre of the title; equals viewport Y while at the top of the page
+      mobileHeadMount.style.top = (r.top + window.scrollY + r.height / 2) + 'px';
+    };
+    alignMobileHead();
+    window.addEventListener('resize', alignMobileHead, { passive: true });
 
     const buildMobileHead = () => {
       const mv = document.createElement('model-viewer');
@@ -349,34 +359,21 @@ document.addEventListener('DOMContentLoaded', () => {
       mv.style.cssText = 'width:100%;height:100%;background:transparent;--mv-background-color:transparent;--poster-color:transparent;--progress-bar-height:0px;pointer-events:none;';
       mobileHeadMount.appendChild(mv);
 
-      let baseRadius = null;
-      let curT = 0,        velT = 0, tgtT = 0;
-      let curP = BASE_PHI, velP = 0, tgtP = BASE_PHI;
+      let curP = BASE_PHI, velP = 0;
 
-      mv.addEventListener('load', () => {
-        baseRadius = mv.getCameraOrbit().radius;
-      }, { once: true });
-
-      // map scroll progress (0 at top → 1 at bottom) onto a left↔right turn
-      const updateTarget = () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        const p   = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-        const s   = p * 2 - 1;            // -1 at top, +1 at bottom
-        tgtT = -s * RANGE_THETA;
-        tgtP = BASE_PHI - s * RANGE_PHI;
-      };
-      updateTarget();
-      window.addEventListener('scroll',  updateTarget, { passive: true });
-      window.addEventListener('resize',  updateTarget, { passive: true });
-
-      // spring loop → smooth, slightly bouncy follow as the scroll target moves
+      // Read the scroll position every frame inside the loop rather than via a
+      // 'scroll' listener — the page's scroll container doesn't bubble scroll
+      // events to window, so polling here is the reliable cross-browser path.
+      // Radius is left as 'auto' so we don't depend on the model's load event.
       const tick = () => {
-        if (baseRadius !== null) {
-          const STIFFNESS = 0.08, DAMPING = 0.8;
-          velT += (tgtT - curT) * STIFFNESS; velT *= DAMPING; curT += velT;
-          velP += (tgtP - curP) * STIFFNESS; velP *= DAMPING; curP += velP;
-          mv.cameraOrbit = `${curT}rad ${curP}rad ${baseRadius}m`;
-        }
+        const sy  = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const p   = max > 0 ? Math.min(1, Math.max(0, sy / max)) : 0;
+        const tgtP = BASE_PHI - p * LOOK_DOWN;   // lower phi → looks further down
+
+        const STIFFNESS = 0.08, DAMPING = 0.8;
+        velP += (tgtP - curP) * STIFFNESS; velP *= DAMPING; curP += velP;
+        mv.cameraOrbit = `0rad ${curP}rad auto`;  // theta 0 → faces forward
         requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);
