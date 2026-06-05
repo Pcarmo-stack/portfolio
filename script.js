@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // between deliberate, eased moves keep it calm and non-distracting.
       const DEG = Math.PI / 180;
       const BASE_PHI = 88 * DEG;
-      const LEFT     = -1;          // sign of theta that turns the head left
+      const LEFT     = 1;           // sign of theta that turns the head toward the content
       const MAX_T    = 30 * DEG;    // furthest left turn
       const TILT     = 4  * DEG;    // tiny up/down variation → stays basically level
 
