@@ -894,6 +894,13 @@ p  { line-height: 1.6; }
     overscroll-behavior: contain;
     padding: 1rem 1.5rem 2rem;
   }
+  /* leave scrollable strips on the sides of the 3D model so users can
+     swipe-to-scroll the modal without touching the model area */
+  .modal-content .model-wrap {
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
+    width: calc(100% - 5rem);  /* 100% - both margins */
+  }
 
   /* tighten section spacing — tokens still apply via clamp, just override padding */
   /* .work top padding is 0 (marquee margin-bottom handles the gap) */
