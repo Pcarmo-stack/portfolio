@@ -463,6 +463,43 @@ document.addEventListener('DOMContentLoaded', () => {
   // expand icon used on gallery images (matches the video fullscreen button)
   const FS_ICON = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4.5V1H4.5M8.5 1H12V4.5M12 8.5V12H8.5M4.5 12H1V8.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
+  /* ---------- FULLSCREEN COMPARE (the before/after slider, blown up & draggable) ---------- */
+  const fsCompare = document.createElement('div');
+  fsCompare.className = 'fs-compare';
+  fsCompare.setAttribute('aria-hidden', 'true');
+  fsCompare.innerHTML = '<button class="lightbox-close" aria-label="Close">×</button><div class="fs-compare-stage"></div>';
+  document.body.appendChild(fsCompare);
+  const fsStage = fsCompare.querySelector('.fs-compare-stage');
+
+  let fscOpenedAt = 0;
+  const openCompareFS = (compareEl) => {
+    const clone = compareEl.cloneNode(true);
+    clone.querySelectorAll('.d-img-fs').forEach(b => b.remove());  // no nested FS button
+    // start centred for a clean fullscreen view
+    const after  = clone.querySelector('.d-compare-after');
+    const handle = clone.querySelector('.d-compare-handle');
+    if (after)  after.style.clipPath = 'inset(0 50% 0 0)';
+    if (handle) handle.style.left = '50%';
+    fsStage.innerHTML = '';
+    fsStage.appendChild(clone);
+    initCompare(clone, false);   // wire up dragging, but no fullscreen button
+    fsCompare.classList.add('is-open');
+    fsCompare.setAttribute('aria-hidden', 'false');
+    fscOpenedAt = Date.now();
+  };
+  const closeCompareFS = () => {
+    fsCompare.classList.remove('is-open');
+    fsCompare.setAttribute('aria-hidden', 'true');
+    fsStage.innerHTML = '';
+  };
+  // close on the close button or the backdrop — but NOT when interacting with the slider
+  fsCompare.addEventListener('click', (e) => {
+    if (Date.now() - fscOpenedAt < 400) return;            // ignore mobile ghost click
+    if (e.target.closest('.lightbox-close')) { closeCompareFS(); return; }
+    if (e.target.closest('.fs-compare-stage')) return;     // tapped the slider → keep open
+    closeCompareFS();
+  });
+
   /* ---------- PROJECT MODAL ---------- */
   const modal = document.getElementById('modal');
   const modalContent = document.getElementById('modal-content');
@@ -529,6 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModal = () => {
     if (!modal) return;
     closeLightbox();
+    closeCompareFS();
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -543,8 +581,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    // lightbox takes priority — close it first without closing the whole modal
-    if (lightbox.classList.contains('is-open')) { closeLightbox(); return; }
+    // overlays take priority — close them first without closing the whole modal
+    if (lightbox.classList.contains('is-open'))  { closeLightbox();  return; }
+    if (fsCompare.classList.contains('is-open')) { closeCompareFS(); return; }
     closeModal();
   });
 
@@ -591,35 +630,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------- BEFORE / AFTER COMPARE SLIDER ---------- */
-  function initCompare(el) {
+  function initCompare(el, withFsButton = true) {
     const before = el.querySelector('.d-compare-before');
     const after  = el.querySelector('.d-compare-after');
     const handle = el.querySelector('.d-compare-handle');
     if (!after || !handle) return;
 
-    /* fullscreen button — opens whichever side is currently most visible.
+    /* fullscreen button — opens the slider itself fullscreen (still draggable).
        Drag-initiating events are stopped so tapping it never moves the slider. */
-    const fsBtn = document.createElement('button');
-    fsBtn.className = 'd-img-fs';
-    fsBtn.setAttribute('aria-label', 'View fullscreen');
-    fsBtn.innerHTML = FS_ICON;
-    const openCurrent = (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      const pct = parseFloat(handle.style.left) || 50;     // % of "after" shown
-      const img = (pct >= 50 ? after : before) || after;   // most-visible side
-      openLightbox(img.currentSrc || img.src, img.alt);
-    };
-    fsBtn.addEventListener('click', openCurrent);
-    // On touch, open on touchend with preventDefault: the slider's touchmove
-    // handler calls preventDefault() during drags which would otherwise cancel
-    // the button's synthesized click. preventDefault here also suppresses that
-    // duplicate click so it opens exactly once.
-    fsBtn.addEventListener('touchend', openCurrent, { passive: false });
-    // swallow the rest of the touch/pointer stream so the slider never reacts
-    ['touchstart', 'touchmove', 'touchcancel', 'pointerdown', 'pointermove', 'pointerup', 'mousedown']
-      .forEach(ev => fsBtn.addEventListener(ev, (e) => e.stopPropagation(), { passive: true }));
-    el.appendChild(fsBtn);
+    if (withFsButton) {
+      const fsBtn = document.createElement('button');
+      fsBtn.className = 'd-img-fs';
+      fsBtn.setAttribute('aria-label', 'View fullscreen');
+      fsBtn.innerHTML = FS_ICON;
+      const openFs = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        openCompareFS(el);
+      };
+      fsBtn.addEventListener('click', openFs);
+      // On touch, open on touchend with preventDefault: the slider's touchmove
+      // handler calls preventDefault() during drags which would otherwise cancel
+      // the button's synthesized click. preventDefault here suppresses the
+      // duplicate click so it opens exactly once.
+      fsBtn.addEventListener('touchend', openFs, { passive: false });
+      // swallow the rest of the touch/pointer stream so the slider never reacts
+      ['touchstart', 'touchmove', 'touchcancel', 'pointerdown', 'pointermove', 'pointerup', 'mousedown']
+        .forEach(ev => fsBtn.addEventListener(ev, (e) => e.stopPropagation(), { passive: true }));
+      el.appendChild(fsBtn);
+    }
 
     const setPos = (x) => {
       const rect = el.getBoundingClientRect();

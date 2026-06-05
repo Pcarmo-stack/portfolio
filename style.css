@@ -699,8 +699,36 @@ p  { line-height: 1.6; }
   line-height: 1;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
+  z-index: 2;
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+}
+
+/* fullscreen before/after slider (stays interactive) */
+.fs-compare {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.fs-compare.is-open { opacity: 1; visibility: visible; }
+.fs-compare-stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+/* cap width so the 16/9 slider never gets taller than the viewport */
+.fs-compare-stage .d-compare {
+  margin: 0;
+  width: min(100%, calc((100vh - 2rem) * 16 / 9));
 }
 .modal-content .d-links {
   margin-top: 2rem;
@@ -922,5 +950,6 @@ model-viewer { transition: unset !important; animation: unset !important; }
 .resume-card      { transition: grid-template-rows 0.28s ease-in-out !important; }
 .resume-toggle    { transition: color 0.2s ease !important; }
 .resume-card-body { transition: transform 0.28s ease-in-out, opacity 0.2s ease !important; }
-/* whitelist: image lightbox fade */
-.lightbox { transition: opacity 0.2s ease, visibility 0.2s ease !important; }
+/* whitelist: image lightbox + fullscreen-compare fade */
+.lightbox,
+.fs-compare { transition: opacity 0.2s ease, visibility 0.2s ease !important; }
