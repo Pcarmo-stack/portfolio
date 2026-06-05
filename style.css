@@ -751,7 +751,8 @@ p  { line-height: 1.6; }
 }
 .model-wrap .d-model {
   width: 100%;
-  height: 60vh;
+  aspect-ratio: 16 / 9;
+  height: auto;
   border-radius: 10px;
   background-color: #3a3a3a;
   --mv-background-color: #3a3a3a;
