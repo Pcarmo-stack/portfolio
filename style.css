@@ -192,7 +192,7 @@ p  { line-height: 1.6; }
 @media (max-width: 1000px) {
   .hero-head-mobile {
     display: block;
-    position: fixed;
+    position: absolute;    /* scrolls away with the page — stays at the top, doesn't follow */
     right: 0.5rem;
     top: 150px;            /* precise value set by JS to match the title's line */
     transform: translateY(-50%);

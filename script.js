@@ -327,19 +327,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ---------- MOBILE 3D HEAD — sits by the title, looks down as you scroll ---------- */
+  /* ---------- MOBILE 3D HEAD — static, sits by the title, scrolls away ---------- */
   const mobileHeadMount = document.getElementById('hero-head-mobile');
   if (mobileHeadMount && isMobileLayout) {
-    const DEG = Math.PI / 180;
-    const BASE_PHI  = 88 * DEG;
-    const LOOK_DOWN = 38 * DEG;  // how far it tilts down by the bottom of the page
-
-    // keep the fixed head vertically aligned with the "Pedro Carmo" title line
+    // align the (absolutely-positioned) head with the "Pedro Carmo" title line
     const alignMobileHead = () => {
       const titleEl = document.querySelector('.hero-title');
       if (!titleEl) return;
       const r = titleEl.getBoundingClientRect();
-      // document-space centre of the title; equals viewport Y while at the top of the page
+      // document-space centre of the title (scroll-independent → correct for absolute)
       mobileHeadMount.style.top = (r.top + window.scrollY + r.height / 2) + 'px';
     };
     alignMobileHead();
@@ -354,29 +350,10 @@ document.addEventListener('DOMContentLoaded', () => {
       mv.setAttribute('environment-image',  'neutral');
       mv.setAttribute('disable-zoom',       '');
       mv.setAttribute('disable-tap',        '');
-      mv.setAttribute('camera-orbit',       '0deg 88deg auto');
+      mv.setAttribute('camera-orbit',       '0deg 88deg auto');  // static resting pose
       mv.setAttribute('alt',                "Pedro's 3D head");
       mv.style.cssText = 'width:100%;height:100%;background:transparent;--mv-background-color:transparent;--poster-color:transparent;--progress-bar-height:0px;pointer-events:none;';
       mobileHeadMount.appendChild(mv);
-
-      let curP = BASE_PHI, velP = 0;
-
-      // Read the scroll position every frame inside the loop rather than via a
-      // 'scroll' listener — the page's scroll container doesn't bubble scroll
-      // events to window, so polling here is the reliable cross-browser path.
-      // Radius is left as 'auto' so we don't depend on the model's load event.
-      const tick = () => {
-        const sy  = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        const p   = max > 0 ? Math.min(1, Math.max(0, sy / max)) : 0;
-        const tgtP = BASE_PHI - p * LOOK_DOWN;   // lower phi → looks further down
-
-        const STIFFNESS = 0.08, DAMPING = 0.8;
-        velP += (tgtP - curP) * STIFFNESS; velP *= DAMPING; curP += velP;
-        mv.cameraOrbit = `0rad ${curP}rad auto`;  // theta 0 → faces forward
-        requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
     };
 
     if (window.customElements && customElements.whenDefined) {
