@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = 'hidden';
     const v = modalContent.querySelector('video');
     if (v) v.play().catch(() => {});
-    modalContent.querySelectorAll('[data-compare]').forEach(initCompare);
+    modalContent.querySelectorAll('[data-compare]').forEach(el => initCompare(el));
     modalContent.querySelectorAll('[data-model-wrap]').forEach(initModelWrap);
 
     /* --- video fullscreen button (no other controls shown) --- */
