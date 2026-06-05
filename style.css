@@ -757,6 +757,7 @@ p  { line-height: 1.6; }
   --mv-background-color: #3a3a3a;
   display: block;
   overscroll-behavior: contain;
+  touch-action: none;   /* rotation wins over page scroll on mobile */
 }
 /* zoom buttons */
 .mv-zoom-bar {

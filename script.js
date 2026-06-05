@@ -620,9 +620,9 @@ document.addEventListener('DOMContentLoaded', () => {
     zoomBar.addEventListener('click', (e) => e.stopPropagation());
     wrap.appendChild(zoomBar);
 
-    /* --- block page scroll when 2 fingers are rotating the model --- */
+    /* --- block page scroll whenever touching the model so rotation always wins --- */
     wrap.addEventListener('touchmove', (e) => {
-      if (e.touches.length >= 2) e.preventDefault();
+      e.preventDefault();
     }, { passive: false });
 
     /* rotate affordance is model-viewer's own built-in hand prompt
