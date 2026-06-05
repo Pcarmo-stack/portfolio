@@ -611,8 +611,14 @@ document.addEventListener('DOMContentLoaded', () => {
       openLightbox(img.currentSrc || img.src, img.alt);
     };
     fsBtn.addEventListener('click', openCurrent);
-    ['pointerdown', 'touchstart', 'mousedown'].forEach(ev =>
-      fsBtn.addEventListener(ev, (e) => e.stopPropagation(), { passive: true }));
+    // On touch, open on touchend with preventDefault: the slider's touchmove
+    // handler calls preventDefault() during drags which would otherwise cancel
+    // the button's synthesized click. preventDefault here also suppresses that
+    // duplicate click so it opens exactly once.
+    fsBtn.addEventListener('touchend', openCurrent, { passive: false });
+    // swallow the rest of the touch/pointer stream so the slider never reacts
+    ['touchstart', 'touchmove', 'touchcancel', 'pointerdown', 'pointermove', 'pointerup', 'mousedown']
+      .forEach(ev => fsBtn.addEventListener(ev, (e) => e.stopPropagation(), { passive: true }));
     el.appendChild(fsBtn);
 
     const setPos = (x) => {
