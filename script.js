@@ -350,10 +350,62 @@ document.addEventListener('DOMContentLoaded', () => {
       mv.setAttribute('environment-image',  'neutral');
       mv.setAttribute('disable-zoom',       '');
       mv.setAttribute('disable-tap',        '');
-      mv.setAttribute('camera-orbit',       '0deg 88deg auto');  // static resting pose
+      mv.setAttribute('camera-orbit',       '0deg 88deg auto');  // starting pose
       mv.setAttribute('alt',                "Pedro's 3D head");
       mv.style.cssText = 'width:100%;height:100%;background:transparent;--mv-background-color:transparent;--poster-color:transparent;--progress-bar-height:0px;pointer-events:none;';
       mobileHeadMount.appendChild(mv);
+
+      // "looking & analysing" idle: glance to a deliberate spot, hold to study
+      // it, then move on. Varied move speeds + dwell pauses + eased motion make
+      // it read as organic rather than a constant drift.
+      const DEG = Math.PI / 180;
+      const BASE_PHI = 88 * DEG;
+      const RANGE_T  = 32 * DEG;   // left/right reach
+      const RANGE_P  = 16 * DEG;   // up/down reach
+
+      // cubic ease-in-out → starts slow, accelerates, settles softly
+      const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+
+      let curT = 0,        curP = BASE_PHI;
+      let fromT = 0,       fromP = BASE_PHI;
+      let toT   = 0,       toP   = BASE_PHI;
+      let moveStart = 0,   moveDur = 600;
+      let dwellUntil = 0,  phase = 'dwell';
+
+      const pickTarget = (now) => {
+        fromT = curT; fromP = curP;
+        const r = Math.random();
+        if (r < 0.5) {                 // glance left / right (mostly horizontal)
+          toT = (Math.random() * 2 - 1) * RANGE_T;
+          toP = BASE_PHI + (Math.random() * 2 - 1) * RANGE_P * 0.3;
+        } else if (r < 0.8) {          // look down to study something
+          toT = (Math.random() * 2 - 1) * RANGE_T * 0.5;
+          toP = BASE_PHI - (0.55 + Math.random() * 0.45) * RANGE_P;
+        } else {                       // drift back up / toward centre
+          toT = (Math.random() * 2 - 1) * RANGE_T * 0.6;
+          toP = BASE_PHI + Math.random() * RANGE_P * 0.6;
+        }
+        // mix quick darting glances with slower, deliberate sweeps
+        moveDur = (Math.random() < 0.5) ? (300 + Math.random() * 250)
+                                        : (800 + Math.random() * 600);
+        moveStart = now;
+        phase = 'move';
+      };
+
+      const tick = (now) => {
+        if (phase === 'move') {
+          const p = Math.min(1, (now - moveStart) / moveDur);
+          const e = ease(p);
+          curT = fromT + (toT - fromT) * e;
+          curP = fromP + (toP - fromP) * e;
+          if (p >= 1) { phase = 'dwell'; dwellUntil = now + 250 + Math.random() * 1100; }
+        } else if (now >= dwellUntil) {
+          pickTarget(now);
+        }
+        mv.cameraOrbit = `${curT}rad ${curP}rad auto`;
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
     };
 
     if (window.customElements && customElements.whenDefined) {
