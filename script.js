@@ -430,6 +430,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------- IMAGE LIGHTBOX (tap a gallery image to view fullscreen) ---------- */
+  const lightbox = document.createElement('div');
+  lightbox.className = 'lightbox';
+  lightbox.setAttribute('aria-hidden', 'true');
+  lightbox.innerHTML = '<button class="lightbox-close" aria-label="Close">×</button><img alt="">';
+  document.body.appendChild(lightbox);
+  const lightboxImg = lightbox.querySelector('img');
+
+  const openLightbox = (src, alt) => {
+    if (!src) return;
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || '';
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+  };
+  const closeLightbox = () => {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImg.removeAttribute('src');
+  };
+  // tap anywhere on the overlay (image, backdrop, or close button) dismisses it
+  lightbox.addEventListener('click', closeLightbox);
+
+  // expand icon used on gallery images (matches the video fullscreen button)
+  const FS_ICON = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4.5V1H4.5M8.5 1H12V4.5M12 8.5V12H8.5M4.5 12H1V8.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
   /* ---------- PROJECT MODAL ---------- */
   const modal = document.getElementById('modal');
   const modalContent = document.getElementById('modal-content');
@@ -465,10 +491,29 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       wrap.appendChild(btn);
     });
+
+    /* --- gallery images: tap (or the expand icon) to view fullscreen --- */
+    modalContent.querySelectorAll('.d-gallery img').forEach(img => {
+      const fig = document.createElement('figure');
+      fig.className = 'd-shot';
+      img.replaceWith(fig);
+      fig.appendChild(img);
+
+      const btn = document.createElement('button');
+      btn.className = 'd-img-fs';
+      btn.setAttribute('aria-label', 'View fullscreen');
+      btn.innerHTML = FS_ICON;
+      fig.appendChild(btn);
+
+      const open = (e) => { e.stopPropagation(); openLightbox(img.currentSrc || img.src, img.alt); };
+      img.addEventListener('click', open);
+      btn.addEventListener('click', open);
+    });
   };
 
   const closeModal = () => {
     if (!modal) return;
+    closeLightbox();
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -482,7 +527,10 @@ document.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('click', closeModal);
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key !== 'Escape') return;
+    // lightbox takes priority — close it first without closing the whole modal
+    if (lightbox.classList.contains('is-open')) { closeLightbox(); return; }
+    closeModal();
   });
 
   /* ---------- 3D MODEL VIEWER — zoom buttons + rotate cue ---------- */
@@ -529,9 +577,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- BEFORE / AFTER COMPARE SLIDER ---------- */
   function initCompare(el) {
+    const before = el.querySelector('.d-compare-before');
     const after  = el.querySelector('.d-compare-after');
     const handle = el.querySelector('.d-compare-handle');
     if (!after || !handle) return;
+
+    /* fullscreen button — opens whichever side is currently most visible.
+       Drag-initiating events are stopped so tapping it never moves the slider. */
+    const fsBtn = document.createElement('button');
+    fsBtn.className = 'd-img-fs';
+    fsBtn.setAttribute('aria-label', 'View fullscreen');
+    fsBtn.innerHTML = FS_ICON;
+    const openCurrent = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const pct = parseFloat(handle.style.left) || 50;     // % of "after" shown
+      const img = (pct >= 50 ? after : before) || after;   // most-visible side
+      openLightbox(img.currentSrc || img.src, img.alt);
+    };
+    fsBtn.addEventListener('click', openCurrent);
+    ['pointerdown', 'touchstart', 'mousedown'].forEach(ev =>
+      fsBtn.addEventListener(ev, (e) => e.stopPropagation(), { passive: true }));
+    el.appendChild(fsBtn);
 
     const setPos = (x) => {
       const rect = el.getBoundingClientRect();

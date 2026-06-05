@@ -637,8 +637,9 @@ p  { line-height: 1.6; }
   display: block;
 }
 .modal-content .d-embed iframe { width: 100%; height: 100%; border: 0; }
-/* fullscreen button — bottom-right corner of video, no other controls */
-.d-video-fs {
+/* fullscreen button — bottom-right corner of video / gallery image */
+.d-video-fs,
+.d-img-fs {
   position: absolute;
   bottom: 0.6rem;
   right: 0.6rem;
@@ -659,6 +660,48 @@ p  { line-height: 1.6; }
   margin-bottom: 1.5rem;
 }
 .modal-content .d-gallery img { width: 100%; border-radius: 10px; display: block; }
+/* gallery image wrapper — positions the fullscreen button; image is tap-to-zoom */
+.modal-content .d-shot { position: relative; margin: 0; display: block; }
+.modal-content .d-shot img { cursor: zoom-in; }
+
+/* fullscreen image lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;            /* above the project modal (200) */
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.lightbox.is-open { opacity: 1; visibility: visible; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+.lightbox-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
 .modal-content .d-links {
   margin-top: 2rem;
   display: flex; flex-wrap: wrap; gap: 1rem;
@@ -879,3 +922,5 @@ model-viewer { transition: unset !important; animation: unset !important; }
 .resume-card      { transition: grid-template-rows 0.28s ease-in-out !important; }
 .resume-toggle    { transition: color 0.2s ease !important; }
 .resume-card-body { transition: transform 0.28s ease-in-out, opacity 0.2s ease !important; }
+/* whitelist: image lightbox fade */
+.lightbox { transition: opacity 0.2s ease, visibility 0.2s ease !important; }
