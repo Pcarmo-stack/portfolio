@@ -267,6 +267,7 @@ p  { line-height: 1.6; }
   font-size: clamp(1.1rem, 2.2vw, 1.7rem);
   font-weight: 300;
   color: var(--fg);
+  will-change: transform;   /* promote to its own GPU layer so scrolling doesn't repaint it */
 }
 /* ✦ separator between each word */
 .marquee-track span::after {
@@ -278,8 +279,7 @@ p  { line-height: 1.6; }
 /* alternating shades — white / grey / white / grey */
 .marquee-track span { color: var(--fg); }
 .marquee-track span:nth-child(even) { color: var(--muted); }
-/* 4 copies → always fills the widest viewport, translateX(-50%) moves 2 copies seamlessly */
-@keyframes marquee { to { transform: translateX(-50%); } }
+/* JS (script.js) drives the scroll via requestAnimationFrame — no CSS keyframe needed */
 
 
 /* =========================================================
@@ -954,8 +954,7 @@ p  { line-height: 1.6; }
 ::selection     { background: transparent; }
 ::-moz-selection { background: transparent; }
 
-/* whitelist: marquee scroll */
-.marquee-track { animation: marquee 120s linear infinite !important; }
+/* marquee is JS-driven (requestAnimationFrame) — no animation whitelist needed */
 
 /* whitelist: model-viewer needs its own transitions to reveal the model */
 model-viewer { transition: unset !important; animation: unset !important; }

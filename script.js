@@ -24,6 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  /* ---------- MARQUEE — JS-driven so it's immune to tab-visibility pauses
+     and the `animation: none !important` CSS kill switch ---------- */
+  const marqueeTrack = document.querySelector('.marquee-track');
+  if (marqueeTrack) {
+    const DURATION = 120000; // ms per cycle — same visual speed as the old CSS
+    let origin = null;
+    let half   = 0;
+    const step = (ts) => {
+      // Capture start time and measure content width on the first tick.
+      // Both are deferred until here so fonts have definitely been applied.
+      if (origin === null) { origin = ts; half = marqueeTrack.scrollWidth / 2; }
+      if (half > 0) {
+        marqueeTrack.style.transform =
+          `translateX(${-((ts - origin) % DURATION) / DURATION * half}px)`;
+      }
+      requestAnimationFrame(step);
+    };
+    // Wait for fonts so scrollWidth reflects the real rendered width.
+    document.fonts.ready.then(() => requestAnimationFrame(step));
+  }
+
   /* ---------- COOKIE 3D MODEL + CRUMB PARTICLES ---------- */
   const cookieMount = document.getElementById('cookie-mount');
 
@@ -309,6 +330,9 @@ document.addEventListener('DOMContentLoaded', () => {
       heroHeadMount.style.transform = 'translateY(-50%)';
     };
     alignHead();
+    // Re-align once Google Fonts have loaded (Fraunces changes the title height),
+    // and again on the next frame so the browser has definitely painted the new size.
+    document.fonts.ready.then(() => requestAnimationFrame(alignHead));
     window.addEventListener('resize', alignHead, { passive: true });
 
     if (window.customElements && customElements.whenDefined) {
@@ -330,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mobileHeadMount.style.top = (r.top + window.scrollY + r.height / 2) + 'px';
     };
     alignMobileHead();
+    document.fonts.ready.then(() => requestAnimationFrame(alignMobileHead));
     window.addEventListener('resize', alignMobileHead, { passive: true });
 
     const buildMobileHead = () => {
@@ -443,11 +468,12 @@ document.addEventListener('DOMContentLoaded', () => {
     lightbox.setAttribute('aria-hidden', 'true');
     lightboxImg.removeAttribute('src');
   };
-  // tap anywhere on the overlay (image, backdrop, or close button) dismisses it.
-  // Ignore taps in the first 400ms — on mobile the opening tap fires a delayed
-  // "ghost click" at the same spot that would otherwise close it instantly.
-  lightbox.addEventListener('click', () => {
+  // Tap the dark backdrop or the ✕ button to close. Clicking the image itself
+  // does NOT close (consistent with "click outside" semantics). Ghost-click guard:
+  // ignore taps in the first 400ms after opening (mobile synthesised click).
+  lightbox.addEventListener('click', (e) => {
     if (Date.now() - lbOpenedAt < 400) return;
+    if (e.target === lightboxImg) return;   // click on image → keep open
     closeLightbox();
   });
 
@@ -483,12 +509,15 @@ document.addEventListener('DOMContentLoaded', () => {
     fsCompare.setAttribute('aria-hidden', 'true');
     fsStage.innerHTML = '';
   };
-  // close on the close button or the backdrop — but NOT when interacting with the slider
+  // ✕ button or the dark backdrop (anywhere outside the slider) closes the overlay.
+  // Clicks inside the slider itself (.d-compare) are drag interactions — keep open.
+  // Note: the old check was `.fs-compare-stage` but that div is width:100%, so the
+  // left/right gaps beside the slider were inside it and never triggered a close.
   fsCompare.addEventListener('click', (e) => {
     if (Date.now() - fscOpenedAt < 400) return;            // ignore mobile ghost click
     if (e.target.closest('.lightbox-close')) { closeCompareFS(); return; }
-    if (e.target.closest('.fs-compare-stage')) return;     // tapped the slider → keep open
-    closeCompareFS();
+    if (e.target.closest('.d-compare')) return;            // interacting with slider → keep open
+    closeCompareFS();                                       // clicked backdrop → close
   });
 
   /* ---------- PROJECT MODAL ---------- */
