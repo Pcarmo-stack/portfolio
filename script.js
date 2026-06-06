@@ -24,15 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ---------- SCROLL INDICATOR — no URL hash change ---------- */
-  const scrollBtn = document.querySelector('.hero-scroll');
-  if (scrollBtn) {
-    scrollBtn.addEventListener('click', () => {
-      const target = document.getElementById('work');
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  }
-
   /* ---------- COOKIE 3D MODEL + CRUMB PARTICLES ---------- */
   const cookieMount = document.getElementById('cookie-mount');
 

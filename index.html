@@ -27,7 +27,7 @@
   <link rel="prefetch" href="models/MyHeadblend.glb" as="fetch" crossorigin />
 
   <!-- Your stylesheet -->
-  <link rel="stylesheet" href="style.css?v=82" />
+  <link rel="stylesheet" href="style.css?v=83" />
 
   <!-- <model-viewer> web component (used for 3D models) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -111,8 +111,8 @@
       <article class="project">
         <div class="project-card">
           <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
-          <img src="images/studio-thumb.jpg" alt="Studio-project" class="project-img" />
-          <img class="project-hover-img" src="images/studio-hover.jpg" alt="" />
+          <img src="images/studio-thumb.jpg" alt="Studio-project" class="project-img" loading="lazy" decoding="async" />
+          <img class="project-hover-img" src="images/studio-hover.jpg" alt="" loading="lazy" decoding="async" />
 
           <div class="project-info">
             <p class="project-meta">3D / Product · 2026</p>
@@ -132,50 +132,50 @@
           </p>
            <!-- HERO VIDEO -->
           <video class="d-video" src="videos/studio-vid.mp4"
-                 poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline></video>  
+                 poster="images/studio-thumb.jpg"
+                 autoplay muted loop playsinline preload="metadata"></video>
           <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
           <div class="d-gallery">
-            <img src="images/studio-gl-5.jpg" alt="studio-gl-1.jpg — view 1" />
-            <img src="images/studio-gl-2.jpg" alt="studio-gl-2.jpg — view 2" />
+            <img src="images/studio-gl-5.jpg" alt="Studio render — view 1" loading="lazy" decoding="async" />
+            <img src="images/studio-gl-2.jpg" alt="Studio render — view 2" loading="lazy" decoding="async" />
           </div>
           <!-- BEFORE / AFTER COMPARE SLIDER
                Replace the src values with your two images. -->
           <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/KC_b.jpeg" alt="Before" />
-            <img class="d-compare-after"  src="images/KC_a.jpeg" alt="After" />
+            <img class="d-compare-before" loading="lazy" decoding="async" src="images/KC_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  loading="lazy" decoding="async" src="images/KC_a.jpeg" alt="After" />
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
               <span class="d-compare-arrow d-compare-arrow--right">›</span>
             </div>
           </div>
           <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/LR_b.jpeg" alt="Before" />
-            <img class="d-compare-after"  src="images/LR_a.jpeg" alt="After" />
+            <img class="d-compare-before" loading="lazy" decoding="async" src="images/LR_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  loading="lazy" decoding="async" src="images/LR_a.jpeg" alt="After" />
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
               <span class="d-compare-arrow d-compare-arrow--right">›</span>
             </div>
           </div>
           <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/RM_b.jpeg" alt="Before" />
-            <img class="d-compare-after"  src="images/RM_a.jpeg" alt="After" />
+            <img class="d-compare-before" loading="lazy" decoding="async" src="images/RM_b.jpeg" alt="Before" />
+            <img class="d-compare-after"  loading="lazy" decoding="async" src="images/RM_a.jpeg" alt="After" />
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
               <span class="d-compare-arrow d-compare-arrow--right">›</span>
             </div>
           </div>
           <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/RF-01-b.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/RF-01-a.jpg" alt="After" />
+            <img class="d-compare-before" loading="lazy" decoding="async" src="images/RF-01-b.jpg" alt="Before" />
+            <img class="d-compare-after"  loading="lazy" decoding="async" src="images/RF-01-a.jpg" alt="After" />
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
               <span class="d-compare-arrow d-compare-arrow--right">›</span>
             </div>
           </div>
           <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/RF-02-b.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/RF-02-a.jpg" alt="After" />
+            <img class="d-compare-before" loading="lazy" decoding="async" src="images/RF-02-b.jpg" alt="Before" />
+            <img class="d-compare-after"  loading="lazy" decoding="async" src="images/RF-02-a.jpg" alt="After" />
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
               <span class="d-compare-arrow d-compare-arrow--right">›</span>
@@ -209,8 +209,8 @@
       <article class="project">
         <div class="project-card">
           <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
-          <img src="images/shark-thumb.jpg" alt="Shark project" class="project-img" />
-          <video class="project-hover-video" src="videos/shark_hover.mp4" muted loop playsinline preload="auto"></video>
+          <img src="images/shark-thumb.jpg" alt="Shark project" class="project-img" loading="lazy" decoding="async" />
+          <video class="project-hover-video" src="videos/shark_hover.mp4" muted loop playsinline preload="none"></video>
 
           <div class="project-info">
             <p class="project-meta">3D / Sculpture · 2026</p>
@@ -231,8 +231,8 @@
             <!-- BEFORE / AFTER COMPARE SLIDER
                Replace the src values with your two images. -->
           <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/shark-d.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/shark-c.jpg" alt="After" />
+            <img class="d-compare-before" loading="lazy" decoding="async" src="images/shark-d.jpg" alt="Before" />
+            <img class="d-compare-after"  loading="lazy" decoding="async" src="images/shark-c.jpg" alt="After" />
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
               <span class="d-compare-arrow d-compare-arrow--right">›</span>
@@ -241,7 +241,7 @@
           <!-- HERO VIDEO -->
           <video class="d-video" src="videos/shark_vid.mp4"
                  poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline></video>
+                 autoplay muted loop playsinline preload="metadata"></video>
 
           <!-- 3D MODEL -->
           <div class="model-wrap" data-model-wrap>
@@ -268,8 +268,8 @@
       <article class="project">
         <div class="project-card">
           <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
-          <img src="images/light-thumb.jpg" alt="Light-project" class="project-img" />
-          <img class="project-hover-img" src="images/light-hover.jpg" alt="" />
+          <img src="images/light-thumb.jpg" alt="Light-project" class="project-img" loading="lazy" decoding="async" />
+          <img class="project-hover-img" src="images/light-hover.jpg" alt="" loading="lazy" decoding="async" />
 
           <div class="project-info">
             <p class="project-meta">3D / Light · 2026</p>
@@ -290,16 +290,16 @@
            <!-- HERO VIDEO -->
           <video class="d-video" src="videos/light-vid2.mp4"
                  poster="images/Final.jpg"
-                 autoplay muted loop playsinline></video>  
+                 autoplay muted loop playsinline preload="metadata"></video>
           <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
           <div class="d-gallery">
-            <img src="images/Final.jpg" alt="Final.jpg — view 1" />
+            <img src="images/Final.jpg" alt="Lit scene — final render" loading="lazy" decoding="async" />
           </div>
           <!-- BEFORE / AFTER COMPARE SLIDER
                Replace the src values with your two images. -->
           <div class="d-compare" data-compare>
-            <img class="d-compare-before" src="images/light_c.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/light_d.jpg" alt="After" />
+            <img class="d-compare-before" loading="lazy" decoding="async" src="images/light_c.jpg" alt="Before" />
+            <img class="d-compare-after"  loading="lazy" decoding="async" src="images/light_d.jpg" alt="After" />
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
               <span class="d-compare-arrow d-compare-arrow--right">›</span>
@@ -307,7 +307,7 @@
           </div>
           <!-- IMAGE GALLERY — drop your images into /images and update the src values -->
           <div class="d-gallery">
-            <img src="images/light-falsecolor2.jpg" alt="light-falsecolor2.jpg — view 1" />
+            <img src="images/light-falsecolor2.jpg" alt="Lit scene — false-colour exposure" loading="lazy" decoding="async" />
           </div>
 
         </template>
@@ -321,8 +321,8 @@
       <article class="project">
         <div class="project-card">
           <!-- THUMBNAIL: replace with your image (recommended 1200x1500) -->
-          <img src="images/shroom-thumb.jpg" alt="Shroom" class="project-img" />
-          <video class="project-hover-video" src="videos/shroom-hover.mp4" muted loop playsinline preload="auto"></video>
+          <img src="images/shroom-thumb.jpg" alt="Shroom" class="project-img" loading="lazy" decoding="async" />
+          <video class="project-hover-video" src="videos/shroom-hover.mp4" muted loop playsinline preload="none"></video>
 
           <div class="project-info">
             <p class="project-meta">3D / Sculpture · 2025</p>
@@ -344,8 +344,8 @@
                Replace the src values with your two images. -->
           <!-- d-shift-left nudges the cropped framing so the subject is centred -->
           <div class="d-compare d-shift-left" data-compare>
-            <img class="d-compare-before" src="images/shroom-b.jpg" alt="Before" />
-            <img class="d-compare-after"  src="images/shroom-a.jpg" alt="After" />
+            <img class="d-compare-before" loading="lazy" decoding="async" src="images/shroom-b.jpg" alt="Before" />
+            <img class="d-compare-after"  loading="lazy" decoding="async" src="images/shroom-a.jpg" alt="After" />
 
             <div class="d-compare-handle">
               <span class="d-compare-arrow d-compare-arrow--left">‹</span>
@@ -354,8 +354,8 @@
           </div>
           <!-- HERO VIDEO -->
           <video class="d-video" src="videos/shroom-vid.mp4"
-                 poster="images/shark-thumb.jpg"
-                 autoplay muted loop playsinline></video>
+                 poster="images/shroom-thumb.jpg"
+                 autoplay muted loop playsinline preload="metadata"></video>
 
           <!-- 3D MODEL -->
           <div class="model-wrap" data-model-wrap>
@@ -369,7 +369,7 @@
                           shadow-intensity="1"
                           exposure="1"
                           environment-image="neutral"
-                          alt="Shark 3D model"></model-viewer>
+                          alt="Shroom 3D model"></model-viewer>
           </div>
 
         </template>
@@ -485,7 +485,7 @@
 
     <!-- SOCIAL LINKS -->
     <div class="footer-socials">
-      <p class="eyebrow small">Socials</p>
+      <p class="eyebrow">Socials</p>
       <ul class="social-row">
         <li><a href="https://www.instagram.com/pedrodcarmo_/" target="_blank" rel="noopener">Instagram ↗</a></li>
         <li><a href="https://www.behance.net/pedrocarmo5" target="_blank" rel="noopener">Behance ↗</a></li>
@@ -512,6 +512,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=80"></script>
+  <script src="script.js?v=81" defer></script>
 </body>
 </html>
