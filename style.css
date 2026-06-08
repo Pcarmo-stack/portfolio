@@ -58,7 +58,10 @@ ul { list-style: none; }
 
   /* Layout */
   --gutter: clamp(1.25rem, 4vw, 4rem);
-  --max:    1600px;
+  /* in rem (not px) so it scales with the root font-size bump below —
+     otherwise the content column "freezes" at 1600px and everything looks
+     proportionally smaller as the viewport grows past it (2K/4K displays) */
+  --max:    100rem;
 
   /* Motion */
   --ease:   cubic-bezier(0.22, 1, 0.36, 1);
@@ -90,6 +93,22 @@ ul { list-style: none; }
   --sp-block: clamp(3.5rem, 6vw, 5.5rem);
   --sp-hero:  clamp(4rem, 8vw, 7rem);
 }
+
+/* ── SCALE UP FOR LARGE / HIGH-RES DISPLAYS ──────────────
+   Every size on the site is driven by `rem` (directly, or as the bounds of a
+   `clamp()`), all anchored to the root font-size. Past ~1600px-wide viewports
+   the type scale and `--max` content column hit their clamp ceilings and stop
+   growing — so on 2K/4K screens the page reads as a fixed-size island with
+   ever-more empty margin, i.e. "everything looks smaller". Nudging the root
+   font-size up at large breakpoints raises every one of those ceilings (and
+   the vw-driven preferred values keep things proportional in between), so the
+   whole layout — type, spacing, gutters, the content column — scales up
+   gracefully instead of freezing.
+   ─────────────────────────────────────────────────────── */
+@media (min-width: 1800px) { html { font-size: 17.5px; } }
+@media (min-width: 2200px) { html { font-size: 19px;   } }
+@media (min-width: 3000px) { html { font-size: 21px;   } }
+@media (min-width: 3840px) { html { font-size: 23px;   } }
 
 
 /* =========================================================
