@@ -390,12 +390,8 @@ p  { line-height: 1.6; }
   border-radius: 12px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.015);
-  /* grid trick: row 1 = head (auto), row 2 = body (0fr collapsed → 1fr open) */
-  display: grid;
-  grid-template-rows: auto 0fr;
 }
 .resume-card:hover { border-color: rgba(246, 245, 241, 0.28); }
-.resume-card.open { grid-template-rows: auto 1fr; }
 .resume-card-head {
   display: flex;
   align-items: center;
@@ -420,8 +416,21 @@ p  { line-height: 1.6; }
   flex: 0 0 auto;
 }
 .resume-card.open .resume-toggle { color: var(--fg); }
+/* Collapsible body: a single-row 0fr↔1fr grid trick, kept on its OWN element
+   (not shared with the head) so the animated track list never contains an
+   `auto` track. Animating `auto` alongside `fr` makes browsers re-resolve the
+   content-based track mid-transition, which made the head visibly grow/shrink
+   and the title + description jump up and down as the card opened/closed.
+   With only `0fr`/`1fr` to interpolate, the head never moves — the card
+   simply grows downward from its fixed head. */
 .resume-card-body {
-  /* min-height: 0 is required so 0fr actually collapses this row.
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease-in-out;
+}
+.resume-card.open .resume-card-body { grid-template-rows: 1fr; }
+.resume-card-body-inner {
+  /* min-height: 0 is required so the 0fr row actually collapses.
      top/bottom spacing are ::before/::after blocks (not padding) so they
      collapse with the row — padding here would stop it closing fully. */
   min-height: 0;
@@ -430,13 +439,14 @@ p  { line-height: 1.6; }
   /* start offset + hidden so content slides down into place on open */
   transform: translateY(-6px);
   opacity: 0;
+  transition: transform 0.28s ease-in-out, opacity 0.2s ease;
 }
-.resume-card.open .resume-card-body {
+.resume-card.open .resume-card-body-inner {
   transform: translateY(0);
   opacity: 1;
 }
-.resume-card-body::before { content: ''; display: block; height: 0.75rem; }
-.resume-card-body::after  { content: ''; display: block; height: 1.5rem; }
+.resume-card-body-inner::before { content: ''; display: block; height: 0.75rem; }
+.resume-card-body-inner::after  { content: ''; display: block; height: 1.5rem; }
 .resume-value {
   font-size: 1rem;
   color: rgba(246,245,241,0.85);
@@ -959,9 +969,9 @@ p  { line-height: 1.6; }
 /* whitelist: model-viewer needs its own transitions to reveal the model */
 model-viewer { transition: unset !important; animation: unset !important; }
 /* whitelist: resume card expand (symmetric ease feels same open/close) */
-.resume-card      { transition: grid-template-rows 0.28s ease-in-out !important; }
-.resume-toggle    { transition: color 0.2s ease !important; }
-.resume-card-body { transition: transform 0.28s ease-in-out, opacity 0.2s ease !important; }
+.resume-toggle          { transition: color 0.2s ease !important; }
+.resume-card-body       { transition: grid-template-rows 0.28s ease-in-out !important; }
+.resume-card-body-inner { transition: transform 0.28s ease-in-out, opacity 0.2s ease !important; }
 /* whitelist: image lightbox + fullscreen-compare fade */
 .lightbox,
 .fs-compare { transition: opacity 0.2s ease, visibility 0.2s ease !important; }
