@@ -393,14 +393,6 @@ p  { line-height: 1.6; }
   /* grid trick: row 1 = head (auto), row 2 = body (0fr collapsed → 1fr open) */
   display: grid;
   grid-template-rows: auto 0fr;
-  /* Promote to its own GPU layer. Without this, animating grid-template-rows
-     on a bordered/rounded/overflow:hidden box makes some browsers repaint the
-     border at each intermediate row-height without clearing the previous
-     frame — leaving "ghost" border lines stacked behind the expanding card.
-     Compositing it as one bitmap avoids the incremental-repaint artifact. */
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 .resume-card:hover { border-color: rgba(246, 245, 241, 0.28); }
 .resume-card.open { grid-template-rows: auto 1fr; }

@@ -372,8 +372,8 @@ document.addEventListener('DOMContentLoaded', () => {
       mobileHeadMount.appendChild(mv);
 
       // Idle gaze: it only looks straight ahead or turns to its left (the head
-      // sits in the top-right corner, so it glances toward the page). Long holds
-      // between deliberate, eased moves keep it calm and non-distracting.
+      // sits in the top-right corner, so it glances toward the page). Short
+      // dwells between deliberate, eased moves keep it lively on mobile.
       const DEG = Math.PI / 180;
       const BASE_PHI = 88 * DEG;
       const LEFT     = 1;           // sign of theta that turns the head toward the content
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const e = ease(p);
           curT = fromT + (toT - fromT) * e;
           curP = fromP + (toP - fromP) * e;
-          if (p >= 1) { phase = 'dwell'; dwellUntil = now + 2500 + Math.random() * 3000; }
+          if (p >= 1) { phase = 'dwell'; dwellUntil = now + 900 + Math.random() * 1400; }
         } else if (now >= dwellUntil) {
           pickTarget(now);
         }
